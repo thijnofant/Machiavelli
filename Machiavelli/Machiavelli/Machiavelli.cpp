@@ -2,10 +2,14 @@
 //
 
 #include "stdafx.h"
+#include "MachiavelliClient.h"
+#include "LocalHost.h"
 
 
 int main()
 {
+	std::shared_ptr<IHostConnection> connection = std::make_shared<LocalHost>();
+	MachiavelliClient client{ connection };
     return 0;
 }
 
