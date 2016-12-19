@@ -1,0 +1,9 @@
+﻿  LocalHost.cpp
+  GameSession.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(138): warning C4018: '>=': signed/unsigned mismatch
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(239): warning C4018: '>=': signed/unsigned mismatch
+  Generating Code...
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.cpp(90): warning C4715: 'LocalHost::GetCommands': not all control paths return a value
+stdafx.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+IHostConnection.obj : warning LNK4221: This object file does not define any previously undefined public symbols, so it will not be used by any link operation that consumes this library
+  MachiavelliLib.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\MachiavelliLib.lib

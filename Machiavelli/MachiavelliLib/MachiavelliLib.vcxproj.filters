@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="HostDomainClasses">
+      <UniqueIdentifier>{23368a41-279b-4ba3-83d0-6c4f76f538cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Connection">
+      <UniqueIdentifier>{576aded8-43d4-44dd-af60-abbde709955f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="IHostConnection.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalHost.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerHostConnection.cpp">
+      <Filter>Connection</Filter>
+    </ClCompile>
+    <ClCompile Include="Card.cpp">
+      <Filter>HostDomainClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="CardGenerator.cpp">
+      <Filter>HostDomainClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="ExecutingPhase.cpp">
+      <Filter>HostDomainClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSession.cpp">
+      <Filter>HostDomainClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="PickingCharactersPhase.cpp">
+      <Filter>HostDomainClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>HostDomainClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IHostConnection.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalHost.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerHostConnection.h">
+      <Filter>Connection</Filter>
+    </ClInclude>
+    <ClInclude Include="Card.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="CardGenerator.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="ExecutingPhase.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePhase.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSession.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="PickingCharactersPhase.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+</Project>
