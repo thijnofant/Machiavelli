@@ -1,15 +1,12 @@
 ﻿  CardGenerator.cpp
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\cardgenerator.cpp(71): warning C4018: '<': signed/unsigned mismatch
+c:\users\kenva\school\blok14\c++\machiavelli\machiavelli\machiavellilib\cardgenerator.cpp(71): warning C4018: '<': signed/unsigned mismatch
   Generating Code...
-  Compiling...
+  Skipping... (no relevant changes detected)
   Player.cpp
   PickingCharactersPhase.cpp
   NotPlayingPhase.cpp
   LocalHost.cpp
   GameSession.cpp
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(156): warning C4018: '>=': signed/unsigned mismatch
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(272): warning C4018: '>=': signed/unsigned mismatch
   ExecutingPhase.cpp
   Card.cpp
-  Generating Code...
-  MachiavelliLib.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\MachiavelliLib.lib
+  MachiavelliLib.vcxproj -> C:\Users\kenva\School\blok14\C++\Machiavelli\Machiavelli\Debug\MachiavelliLib.lib

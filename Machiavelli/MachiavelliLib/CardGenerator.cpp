@@ -76,14 +76,23 @@ void CardGenerator::AddCardXTimes(Card card, vector<Card>& deck, int amountOfTim
 
 vector<Card> CardGenerator::BuildDeckFromFile(string fileName)
 {
+	std::ifstream is(fileName);
 	vector<Card> _deck;
 	Card newCard;
-	//todo open file and read into ifstream
-	std::ifstream is(fileName);
+	//NOTE: if failbit set, does not enter while.
 	while (is >> newCard)
 	{
-		_deck.push_back(newCard);
+		if (is.good())
+		{
+			_deck.push_back(newCard);
+		}
+		//NOTE: skip card if bad line and continue.
+		else
+		{
+			is.setstate(std::ios::goodbit);
+		}
 	}
+
 	is.close();
 	return _deck;
 }

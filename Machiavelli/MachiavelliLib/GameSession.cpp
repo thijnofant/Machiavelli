@@ -6,9 +6,14 @@
 #include "NotPlayingPhase.h"
 
 
-GameSession::GameSession(int amountOfPlayers) : amountOfMoneyInBank{ 30 }, amountOfPlayers{ amountOfPlayers }, gameOver{ false }
+GameSession::GameSession(int amountOfPlayers) : 
+	amountOfMoneyInBank{ 30 }, 
+	amountOfPlayers{ amountOfPlayers }, 
+	gameOver{ false },
+	deck(CardGenerator::BuildDeckFromFile("../cards.txt"))
 {
-	deck = CardGenerator::CreateAndGetAllCards(this);
+//	deck = CardGenerator::CreateAndGetAllCards(this);
+	
 	std::shuffle(std::begin(deck), std::end(deck), Util::GetRandomEngine());
 }
 

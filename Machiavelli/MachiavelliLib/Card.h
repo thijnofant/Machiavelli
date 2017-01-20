@@ -8,8 +8,20 @@ enum CardColour
 	Purple = 5
 };
 
-const map<CardColour, string> CardColourEnumToString = {{Yellow, "Yellow"}, {Blue, "Blue"}, {Green, "Green"}, {Red, "Red"}, {Purple, "Purple"},};
-const map<string, CardColour> CardColourStringToEnum = { {CardColourEnumToString.at(Yellow), Yellow},{ CardColourEnumToString.at(Blue), Blue },{ CardColourEnumToString.at(Green), Green },{ CardColourEnumToString.at(Red), Red },{ CardColourEnumToString.at(Purple), Purple } };
+const map<CardColour, string> CardColourEnumToString = {
+	{Yellow, "geel"}, 
+	{Blue, "blauw"}, 
+	{Green, "groen"}, 
+	{Red, "rood"}, 
+	{Purple, "lila"}
+};
+const map<string, CardColour> CardColourStringToEnum = { 
+	{ CardColourEnumToString.at(Yellow), Yellow },
+	{ CardColourEnumToString.at(Blue), Blue },
+	{ CardColourEnumToString.at(Green), Green },
+	{ CardColourEnumToString.at(Red), Red },
+	{ CardColourEnumToString.at(Purple), Purple } 
+};
 
 
 class Card
@@ -23,9 +35,8 @@ private:
 	bool destructable;
 
 public:
-	Card(): cost(0), pointValue(0), colour(CardColour::Purple), destructable(true)
-	{
-	}
+	Card(): cost(0), pointValue(0), colour(CardColour::Purple), text(""), destructable(true)
+	{}
 
 	Card(string name, int cost, int pointValue, CardColour colour, string text = "", bool destructable = true);
 	~Card();
@@ -35,6 +46,12 @@ public:
 	{
 		string line;
 		getline(is, line);
+
+		if (line.empty())
+		{
+			is.setstate(std::ios::badbit);
+			return is;
+		}
 
 		string segment;
 		std::vector<std::string> seglist;
@@ -49,13 +66,8 @@ public:
 		obj.pointValue = stoi(seglist[2]);
 		obj.colour = CardColourStringToEnum.at(seglist[3]);
 		obj.text = seglist[4];
+		obj.destructable = seglist[5] == "1";
 
-		//todo destructable
-
-
-		//TODO get a line and read that info into this card
-
-		// stream is data into object
 		return is;
 	}
 
