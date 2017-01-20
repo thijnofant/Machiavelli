@@ -72,8 +72,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -97,8 +96,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -131,19 +129,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
+    <ClCompile Include="CardFactory.cpp" />
     <ClCompile Include="CardGenerator.cpp" />
     <ClCompile Include="ExecutingPhase.cpp" />
     <ClCompile Include="GameSession.cpp" />
-    <ClCompile Include="IHostConnection.cpp" />
     <ClCompile Include="LocalHost.cpp" />
+    <ClCompile Include="NotPlayingPhase.cpp" />
     <ClCompile Include="PickingCharactersPhase.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ServerHostConnection.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.h" />
+    <ClInclude Include="CardFactory.h" />
     <ClInclude Include="CardGenerator.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="ExecutingPhase.h" />
@@ -151,6 +155,7 @@
     <ClInclude Include="GameSession.h" />
     <ClInclude Include="IHostConnection.h" />
     <ClInclude Include="LocalHost.h" />
+    <ClInclude Include="NotPlayingPhase.h" />
     <ClInclude Include="PickingCharactersPhase.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ServerHostConnection.h" />

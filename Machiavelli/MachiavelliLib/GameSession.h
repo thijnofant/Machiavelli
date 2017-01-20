@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include "stdafx.h"
 #include "Card.h"
 #include "Player.h"
 #include "Character.h"
@@ -7,14 +7,18 @@ class GamePhase;
 
 enum GamePhases
 {
+	NotPlaying = 0,
 	PickingCharacters = 1,
 	Executing = 2,
 };
-class GameSession: public std::enable_shared_from_this<GameSession>
+const map<GamePhases, string> GamePhaseEnumToString = { {NotPlaying,"Not playing"},{PickingCharacters,"Picking Characters"},{Executing,"Executing"} };
+const map<string, GamePhases> GamePhaseStringToEnum = { { GamePhaseEnumToString.at(NotPlaying), NotPlaying},{ GamePhaseEnumToString.at(PickingCharacters) , PickingCharacters },{ GamePhaseEnumToString.at(Executing) , Executing } };
+
+class GameSession
 {
 private:
 	int amountOfMoneyInBank;
-	vector<Card> deck;
+	vector<Card> deck; //todo kijk naar dequeu
 	vector<Card> discardPile;
 	vector<Character> characters;
 	vector<Character> characterDiscardPile;
@@ -36,12 +40,12 @@ public:
 	string GetStatus(int token);
 	bool ContainsPlayer(int token);
 	bool ContainsPlayer(string playerName);
-	bool AddPlayer(shared_ptr<Player> newPlayer);
-	bool HandleAction(int token, string message, shared_ptr<GameSession> session);
-	vector<string> GetActions(int token, shared_ptr<GameSession> session);
-	bool IsItMyTurn(int token, shared_ptr<GameSession> session);
+	bool AddPlayer(shared_ptr<Player> newPlayer, shared_ptr<GameSession> session);
+	bool HandleAction(int token, string message, shared_ptr<GameSession> session) const;
+	vector<string> GetActions(int token, shared_ptr<GameSession> session) const;
+	const bool IsItMyTurn(int token, shared_ptr<GameSession> session) const;
 	void SetPhase(GamePhases phase, shared_ptr<GameSession> session);
-	shared_ptr<Player> GetCurrentPlayer();
+	shared_ptr<Player> GetCurrentPlayer() const;
 	void SetCurrentPlayer(shared_ptr<Player> player);
 	int GetAmountOfPlayers() const;
 	shared_ptr<Player> GetKing();
@@ -53,5 +57,7 @@ public:
 	void NextPlayer();
 	bool IsGameOver() const;
 	void SetGameOver(bool isGameOver);
+	void SendAllPlayersMessage(string message);
+	vector<Card> DrawCards(int amount);
 };
 

@@ -1,1 +1,4 @@
-﻿  Server.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\Server.exe
+﻿  Server.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\server\server.cpp(116): warning C4018: '<': signed/unsigned mismatch
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\server\server.cpp(128): warning C4018: '<=': signed/unsigned mismatch
+  Server.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\Server.exe

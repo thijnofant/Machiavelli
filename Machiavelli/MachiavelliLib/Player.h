@@ -34,6 +34,11 @@ public:
 	void Givecharacter(Character character);
 	void GiveMoney(int amount);
 	void SpendMoney(int amount);
+	void GiveCards(vector<Card> card);
+	bool BuildCard(string cardName);
+
+	bool HasCardInVillage(string cardName);
+	int GetAmountOfColourInVillage(CardColour colour);
 
 	void SetIsKing(bool isKing);
 };

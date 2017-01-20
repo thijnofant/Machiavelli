@@ -3,9 +3,10 @@
 #include "CardGenerator.h"
 #include "PickingCharactersPhase.h"
 #include "ExecutingPhase.h"
+#include "NotPlayingPhase.h"
 
 
-GameSession::GameSession(int amountOfPlayers) : amountOfPlayers{ amountOfPlayers }, amountOfMoneyInBank{ 30 }, gameOver{ false }
+GameSession::GameSession(int amountOfPlayers) : amountOfMoneyInBank{ 30 }, amountOfPlayers{ amountOfPlayers }, gameOver{ false }
 {
 	deck = CardGenerator::CreateAndGetAllCards(this);
 	std::shuffle(std::begin(deck), std::end(deck), Util::GetRandomEngine());
@@ -41,11 +42,16 @@ shared_ptr<Player> GameSession::GetPlayer(string userName)
 
 string GameSession::GetStatus()
 {
-	std::stringstream status; 
+	if (!IsFull())
+	{
+		return "\r\n Waiting for more players to join...\r\n";
+	}
 
-	status << "Amount of money left in bank: " << amountOfMoneyInBank << "\r\n";
+	std::stringstream status;
 
-	//temp for debug print all cards in deck
+	status << "\r\n  Amount of money left in bank: " << amountOfMoneyInBank << "\r\n";
+
+	//todo temp for debug print all cards in deck
 	for (auto card : deck)
 	{
 		status << card.GetName() << " ";
@@ -60,7 +66,7 @@ string GameSession::GetStatus()
 		{
 			status << " " << card.GetName();
 		}
-		status << "\r\n";
+		status << ". Vilage size: " << std::to_string(player->GetVillage().size()) << " \r\n";
 	}
 
 	return status.str();
@@ -68,6 +74,11 @@ string GameSession::GetStatus()
 
 string GameSession::GetStatus(int token)
 {	
+	if (!IsFull())
+	{
+		return GetStatus();
+	}
+
 	auto player = GetPlayer(token);
 	
 	if (player != nullptr)
@@ -102,7 +113,7 @@ bool GameSession::ContainsPlayer(string playerName)
 	return false;
 }
 
-bool GameSession::AddPlayer(shared_ptr<Player> newPlayer)
+bool GameSession::AddPlayer(shared_ptr<Player> newPlayer, shared_ptr<GameSession> session)
 {	
 	if (!IsFull())
 	{
@@ -112,24 +123,31 @@ bool GameSession::AddPlayer(shared_ptr<Player> newPlayer)
 		}
 
 		this->players.push_back(newPlayer);
+		if (IsFull())
+		{
+			SetPhase(PickingCharacters, session);
+		}
 		return true;
 	}
-
 	return false;
 }
 
-bool GameSession::HandleAction(int token, string message, shared_ptr<GameSession> session)
+bool GameSession::HandleAction(int token, string message, shared_ptr<GameSession> session) const
 {
 	return currentPhase->HandleAction(token, message, session);
 }
 
-vector<string> GameSession::GetActions(int token, shared_ptr<GameSession> session)
+vector<string> GameSession::GetActions(int token, shared_ptr<GameSession> session) const
 {
 	return currentPhase->GetActions(token, session);
 }
 
-bool GameSession::IsItMyTurn(int token, shared_ptr<GameSession> session)
+const bool GameSession::IsItMyTurn(int token, shared_ptr<GameSession> session) const
 {
+	if (gameOver)
+	{
+		return true;
+	}
 	return currentPhase->IsItMyTurn(token, session);
 }
 
@@ -140,16 +158,28 @@ bool GameSession::IsFull() const
 
 void GameSession::SetPhase(GamePhases phase, shared_ptr<GameSession> session)
 {
-	cout << "switching phases" << endl;
+	cout << "switching to phase " << GamePhaseEnumToString.at(phase) << endl;
 
-	//todo if game over end game
+	if (gameOver)
+	{
+		//todo end game
+		//todo tally scores
+		//todo als speler Hof der wonderen heeft vraag om welke kleur deze moet worden
+		//todo message players with scores
+		//todo go to final phase
+	}
 
 	switch (phase)
 	{
+	case NotPlaying:
+		currentPhase = std::make_unique<NotPlayingPhase>();
+		break;
 	case PickingCharacters:
+		SendAllPlayersMessage("\r\nTime to pick characters.");
 		currentPhase = std::make_unique<PickingCharactersPhase>();
 		break;
 	case Executing: 
+		SendAllPlayersMessage("\r\nAll characters chosen, time to play.");
 		currentPhase = std::make_unique<ExecutingPhase>(session);
 		break;
 	default: break;
@@ -158,7 +188,7 @@ void GameSession::SetPhase(GamePhases phase, shared_ptr<GameSession> session)
 
 }
 
-shared_ptr<Player> GameSession::GetCurrentPlayer()
+shared_ptr<Player> GameSession::GetCurrentPlayer() const
 {
 	return currentPlayer;
 }
@@ -255,4 +285,24 @@ bool GameSession::IsGameOver() const
 void GameSession::SetGameOver(bool isGameOver)
 {
 	gameOver = isGameOver;
+}
+
+void GameSession::SendAllPlayersMessage(string message)
+{
+	for (auto player : players)
+	{
+		player->SendMessage(message);
+	}
+}
+
+vector<Card> GameSession::DrawCards(int amount)
+{
+	vector<Card> reVector;
+	for (int i = 0; i < amount; i++)
+	{
+		Card reCard = deck[0];
+		deck.erase(deck.begin());
+		reVector.push_back(reCard);
+	}
+	return reVector;
 }

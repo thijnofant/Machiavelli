@@ -6,7 +6,7 @@
 // Implementation of classes Socket, ServerSocket and CientSocket
 //=============================================================================
 
-
+#include "stdafx.h"
 #include "Socket.h"
 #include "throw.h"
 #include <iostream>

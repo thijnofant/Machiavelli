@@ -1,3 +1,4 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Machiavelli.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Machiavelli.cpp
-  Machiavelli.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\MachiavelliClient.exe
+cl : Command line warning D9025: overriding '/Ycstdafx.h' with '/Ycstdfx.cpp'
+  stdafx.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavelli\stdafx.cpp(9): error C2857: '#include' statement specified with the /Ycstdfx.cpp command-line option was not found in the source file

@@ -22,13 +22,13 @@ namespace machiavelli {
 	const string prompt{ "machiavelli> " };
 }
 
-int __WAITTIME__ = 1000; //Note: wait time in run
+const int __WAITTIME__ = 1000; //Note: wait time in run
 static Sync_queue<ClientCommand> commandQueue;
 
 void consume_command(shared_ptr<IHostConnection> host) // runs in its own thread
 {
 	try {
-		while (true) {
+	 	while (true) {
 			ClientCommand command{ commandQueue.get() }; // will block here unless there are still command objects in the queue
 			if (auto clientInfo = command.get_client_info().lock()) {
 				auto &client = clientInfo->get_socket();
@@ -66,6 +66,7 @@ std::shared_ptr<ClientInfo> init_client_session(Socket client) {
 	client.write(machiavelli::prompt);
 	string name{ client.readline() };
 	return make_shared<ClientInfo>(move(client), User{ name });
+	//todo voeg hier iets toe om te kijken of er al een client is met deze naam
 }
 
 void handle_client(Socket client, shared_ptr<IHostConnection> host) // this function runs in a separate thread
@@ -84,12 +85,20 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 		while (running) { // game loop
 			try {
 
+				string messages = host->GetMessages(user.GetToken());
+				if (messages != "")
+				{
+					socket << messages << "\r\n";
+				}
+				
+				//todo haal deze status hier weg messages is the way to go
 				string newStatus = host->GetGameStatus(user.GetToken());
 				if (status != newStatus)
 				{
 					status = newStatus;
 					socket << status << "\r\n";
 				}
+
 				if (host->IsItMyTurn(user.GetToken()))
 				{
 					//get commands
@@ -97,7 +106,12 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 					commands.push_back("exit");
 
 					//check for new messages issued during by getcommands
-					socket << host->GetMessages(user.GetToken()) << "\r\n";
+					messages = host->GetMessages(user.GetToken());
+					if (messages != "")
+					{
+						socket << messages << "\r\n";
+					}
+
 
 					for (auto i = 0; i < commands.size(); i++)
 					{
@@ -116,6 +130,7 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 							if (commands[inCmd] == "exit")
 							{
 								running = false;
+								//todo let other player know 
 								break;
 							}
 							else
@@ -167,7 +182,8 @@ int main(int argc, const char * argv[])
 		try {
 			while (true) {
 				// wait for connection from client; will create new socket
-				cerr << "server listening" << '\n';
+				cerr << "server listening on localhost:"<< machiavelli::tcp_port << '\n';
+				cerr << "Please use a telnet client to connect \n";
 				Socket client{ server.accept() };
 
 				// communicate with client over new socket in separate thread

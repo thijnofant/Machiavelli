@@ -2,6 +2,7 @@
 // adapted for Windows as well, november 2014
 // copyright © 2002-2014 Bob Polis
 
+#include "stdafx.h"
 #include <string>
 #include <sstream>
 #include <iostream>

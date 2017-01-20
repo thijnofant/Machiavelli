@@ -8,6 +8,10 @@ enum CardColour
 	Purple = 5
 };
 
+const map<CardColour, string> CardColourEnumToString = {{Yellow, "Yellow"}, {Blue, "Blue"}, {Green, "Green"}, {Red, "Red"}, {Purple, "Purple"},};
+const map<string, CardColour> CardColourStringToEnum = { {CardColourEnumToString.at(Yellow), Yellow},{ CardColourEnumToString.at(Blue), Blue },{ CardColourEnumToString.at(Green), Green },{ CardColourEnumToString.at(Red), Red },{ CardColourEnumToString.at(Purple), Purple } };
+
+
 class Card
 {
 private:
@@ -19,9 +23,52 @@ private:
 	bool destructable;
 
 public:
+	Card(): cost(0), pointValue(0), colour(CardColour::Purple), destructable(true)
+	{
+	}
+
 	Card(string name, int cost, int pointValue, CardColour colour, string text = "", bool destructable = true);
 	~Card();
+	friend std::ostream& operator<<(std::ostream& is, const Card& obj);
 
-	string GetName();
+	friend std::istream& operator>>(std::istream& is, Card& obj)
+	{
+		string line;
+		getline(is, line);
+
+		string segment;
+		std::vector<std::string> seglist;
+		std::stringstream temp(line);
+		while (getline(temp, segment, ';'))
+		{
+			seglist.push_back(segment);
+		}
+
+		obj.name = seglist[0];
+		obj.cost = stoi(seglist[1]);
+		obj.pointValue = stoi(seglist[2]);
+		obj.colour = CardColourStringToEnum.at(seglist[3]);
+		obj.text = seglist[4];
+
+		//todo destructable
+
+
+		//TODO get a line and read that info into this card
+
+		// stream is data into object
+		return is;
+	}
+
+	string GetName() const;
+	int GetCost() const;
+	CardColour GetColour() const;
 };
+
+inline std::ostream& operator<<(std::ostream& os, const Card& obj)
+{
+	// stream obj's data into os
+	return os;
+}
+
+
 

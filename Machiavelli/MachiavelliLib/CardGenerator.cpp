@@ -14,6 +14,8 @@ CardGenerator::~CardGenerator()
 
 vector<Card> CardGenerator::CreateAndGetAllCards(GameSession* session)
 {
+	//todo haal deze uit een file
+	//todo lambda mischien voor de paarse kaarten?
 	vector<Card> r_vector;
 	//Rode kaarten
 	{
@@ -72,3 +74,16 @@ void CardGenerator::AddCardXTimes(Card card, vector<Card>& deck, int amountOfTim
 	}
 }
 
+vector<Card> CardGenerator::BuildDeckFromFile(string fileName)
+{
+	vector<Card> _deck;
+	Card newCard;
+	//todo open file and read into ifstream
+	std::ifstream is(fileName);
+	while (is >> newCard)
+	{
+		_deck.push_back(newCard);
+	}
+	is.close();
+	return _deck;
+}

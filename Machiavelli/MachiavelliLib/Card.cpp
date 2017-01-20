@@ -9,7 +9,17 @@ Card::~Card()
 {
 }
 
-string Card::GetName()
+string Card::GetName() const
 {
 	return name;
+}
+
+int Card::GetCost() const
+{
+	return cost;
+}
+
+CardColour Card::GetColour() const
+{
+	return colour;
 }

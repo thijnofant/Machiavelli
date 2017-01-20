@@ -23,17 +23,20 @@ PickingCharactersPhase::~PickingCharactersPhase()
 
 bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<GameSession> session)
 {
+	//todo get characters from file
 	if (subPhase == 1 || subPhase == 2 || subPhase == 3 || subPhase == 4)
 	{
+		auto player = session->GetCurrentPlayer();
+
 		//player gets to pick character
 		if (subsubPhase == 1)
 		{
-			auto player = session->GetCurrentPlayer();
 			if (subPhase == 1|| subPhase == 2)
 				player->ClearCharacters();
 
 			player->Givecharacter(chararacterStringToEnum[message]);
 			availableCharacters.erase(std::remove(availableCharacters.begin(), availableCharacters.end(), chararacterStringToEnum[message]), availableCharacters.end());
+			player->SendMessage("You picked the " + chararacterStringToEnum[message]);
 			subsubPhase++;
 
 			if (subPhase == 1)
@@ -47,6 +50,7 @@ bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<
 		else if (subsubPhase == 2)
 		{
 			availableCharacters.erase(std::remove(availableCharacters.begin(), availableCharacters.end(), chararacterStringToEnum[message]), availableCharacters.end());
+			player->SendMessage("You discarded the " + chararacterStringToEnum[message]);
 						
 			session->NextPlayer();
 

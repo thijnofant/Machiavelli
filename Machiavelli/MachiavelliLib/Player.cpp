@@ -116,6 +116,66 @@ void Player::SpendMoney(int amount)
 	amountOfCoins -= amount;
 }
 
+void Player::GiveCards(vector<Card> cards)
+{
+	for (auto card : cards)
+	{
+		hand.push_back(card);
+	}
+}
+
+bool Player::BuildCard(string cardName)
+{
+	for (auto card : hand)
+	{
+		if (cardName == card.GetName())
+		{
+			if (card.GetCost() > this->amountOfCoins)
+			{
+				SendMessage("Insuficient funds to build the " + card.GetName());
+				return false;
+			}
+
+			this->amountOfCoins -= card.GetCost();
+
+			village.push_back(card);
+			return true;
+
+			//todo remove from hand!
+			
+			//vector<Card> reVector;
+			//deck.erase(deck.begin());
+			//reVector.push_back(reCard);
+		}
+	}
+	return false;
+}
+
+bool Player::HasCardInVillage(string cardName)
+{
+	for (auto building : village)
+	{
+		if( building.GetName() == cardName)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+int Player::GetAmountOfColourInVillage(CardColour colour)
+{
+	int amount = 0;
+	for (auto building : village)
+	{
+		if (building.GetColour() == colour)
+		{
+			amount++;
+		}
+	}
+	return amount;
+}
+
 void Player::SetIsKing(bool isKing)
 {
 	this->isKing = isKing;

@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <random>
 #include <ctime>
+#include <thread>
 #include "Util.h"
 
 using std::vector;
