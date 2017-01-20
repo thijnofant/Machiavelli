@@ -10,11 +10,11 @@
     <Filter Include="Connection">
       <UniqueIdentifier>{576aded8-43d4-44dd-af60-abbde709955f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HostDomainClasses\GamePhases">
+      <UniqueIdentifier>{5bcdaead-8c1f-4fc0-9286-58b07d1b691b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="IHostConnection.cpp">
-      <Filter>Connection</Filter>
-    </ClCompile>
     <ClCompile Include="LocalHost.cpp">
       <Filter>Connection</Filter>
     </ClCompile>
@@ -27,13 +27,7 @@
     <ClCompile Include="CardGenerator.cpp">
       <Filter>HostDomainClasses</Filter>
     </ClCompile>
-    <ClCompile Include="ExecutingPhase.cpp">
-      <Filter>HostDomainClasses</Filter>
-    </ClCompile>
     <ClCompile Include="GameSession.cpp">
-      <Filter>HostDomainClasses</Filter>
-    </ClCompile>
-    <ClCompile Include="PickingCharactersPhase.cpp">
       <Filter>HostDomainClasses</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
@@ -41,6 +35,18 @@
     </ClCompile>
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="ExecutingPhase.cpp">
+      <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClCompile>
+    <ClCompile Include="PickingCharactersPhase.cpp">
+      <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClCompile>
+    <ClCompile Include="CardFactory.cpp">
+      <Filter>HostDomainClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="NotPlayingPhase.cpp">
+      <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IHostConnection.h">
@@ -61,16 +67,7 @@
     <ClInclude Include="Character.h">
       <Filter>HostDomainClasses</Filter>
     </ClInclude>
-    <ClInclude Include="ExecutingPhase.h">
-      <Filter>HostDomainClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="GamePhase.h">
-      <Filter>HostDomainClasses</Filter>
-    </ClInclude>
     <ClInclude Include="GameSession.h">
-      <Filter>HostDomainClasses</Filter>
-    </ClInclude>
-    <ClInclude Include="PickingCharactersPhase.h">
       <Filter>HostDomainClasses</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -78,5 +75,20 @@
     </ClInclude>
     <ClInclude Include="Util.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="ExecutingPhase.h">
+      <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePhase.h">
+      <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClInclude>
+    <ClInclude Include="PickingCharactersPhase.h">
+      <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClInclude>
+    <ClInclude Include="CardFactory.h">
+      <Filter>HostDomainClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="NotPlayingPhase.h">
+      <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,0 +1,65 @@
+Landgoed;3;3;geel;
+Landgoed;3;3;geel;
+Landgoed;3;3;geel;
+Landgoed;3;3;geel;
+Landgoed;3;3;geel;
+Kasteel;4;4;geel;
+Kasteel;4;4;geel;
+Kasteel;4;4;geel;
+Kasteel;4;4;geel;
+Paleis;5;5;geel;
+Paleis;5;5;geel;
+Paleis;5;5;geel;
+Taveerne;1;1;groen;
+Taveerne;1;1;groen;
+Taveerne;1;1;groen;
+Taveerne;1;1;groen;
+Taveerne;1;1;groen;
+Markt;2;2;groen;
+Markt;2;2;groen;
+Markt;2;2;groen;
+Markt;2;2;groen;
+Winkels;2;2;groen;
+Winkels;2;2;groen;
+Winkels;2;2;groen;
+Handelshuis;3;3;groen;
+Handelshuis;3;3;groen;
+Handelshuis;3;3;groen;
+Haven;4;4;groen;
+Haven;4;4;groen;
+Haven;4;4;groen;
+Raadhuis;5;5;groen;
+Raadhuis;5;5;groen;
+Tempel;1;1;blauw;
+Tempel;1;1;blauw;
+Tempel;1;1;blauw;
+Kerk;2;2;blauw;
+Kerk;2;2;blauw;
+Kerk;2;2;blauw;
+Klooster;3;3;blauw;
+Klooster;3;3;blauw;
+Klooster;3;3;blauw;
+Kathedraal;5;5;blauw;
+Kathedraal;5;5;blauw;
+Wachttoren;1;1;rood;
+Wachttoren;1;1;rood;
+Wachttoren;1;1;rood;
+Gevangenis;2;2;rood;
+Gevangenis;2;2;rood;
+Gevangenis;2;2;rood;
+Toernooiveld;3;3;rood;
+Toernooiveld;3;3;rood;
+Toernooiveld;3;3;rood;
+Burcht;5;5;rood;
+Burcht;5;5;rood;
+Hof der Wonderen;2;2;lila;Bij het tellen van overwinningspunten mag je het Hof de Wonderen als een bouwwerk met een kleur naar keuze benoemen.
+Kerker;3;3;lila;De kerker kan niet door de Condottiere verwoest worden.
+Kerker;3;3;lila;De kerker kan niet door de Condottiere verwoest worden.
+Kerkhof;5;5;lila;Als de Conottiere een gebouw verwoest
+Laboratorium;5;5;lila;Gedurende je beurt mag je éénmaal een bouwkaart afleggen. Je krijgt daarvoor een goudstuk terug.
+Werkplaats;5;5;lila;Je mag tijdens je beurt éénmaal drie goudstukken betalen om twee bouwkaarten te trekken.
+Observatorium;5;5;lila;Als je aan het begin van je beurt voor een bouwkaart kiest
+Bibliotheek;6;6;lila;Als je aan het begin van je beurt kaarten trekt
+School voor magiërs;6;6;lila;Tijdens de inkomensfasen neemt de School voor magiërs een kleur naar keuze aan. Je krijgt derhalve een goudstuk als je de Koning
+Drakenpoort;6;8;lila;Dit prestigieuze gebouw kost 6 goudstukken en levert aan het einde van het spel 8 punten op.
+Universiteit;6;8;lila;Dit prestigieuze gebouw kost 6 goudstukken en levert aan het einde van het spel 8 punten op.

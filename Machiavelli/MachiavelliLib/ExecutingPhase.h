@@ -19,11 +19,11 @@ public:
 
 	void HandTurnToNextCharacter(shared_ptr<GameSession> session);
 
-	bool WasCharKilled(int character) const
+	inline bool WasCharKilled(int character) const
 	{
 		return character == charToKill;
 	}
-	bool WasCharRobbed(int character) const
+	inline bool WasCharRobbed(int character) const
 	{
 		return character == charToRob;
 	}

@@ -12,12 +12,14 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <memory>
+#include <fstream>
 #include <sstream>
+#include <memory>
 #include <algorithm>
 #include <random>
 #include <ctime>
 #include "Util.h"
+#include <map>
 
 using std::vector;
 using std::string;
@@ -27,3 +29,4 @@ using std::endl;
 using std::shared_ptr;
 using std::weak_ptr;
 using std::unique_ptr;
+using std::map;

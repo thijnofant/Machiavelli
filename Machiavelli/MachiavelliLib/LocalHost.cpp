@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "LocalHost.h"
 #include <memory>
+//todo actions omschrijven zodat mogelijke opties op elk moment kunnen worden toegevoegd aan een lijst in de speler zodat deze op elk moment veranderd kan worden.
+//todo ergens een lambda in stoppen omdat dat verplicht is
 
 
 std::shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(int token)
@@ -56,17 +58,17 @@ int LocalHost::Connect(string playerName)
 	if (session!= nullptr) //A session is waiting for a seccond player
 	{
 		auto newPlayer = std::make_shared<Player>(lastToken++, playerName, false);
-		session->AddPlayer(newPlayer);
+		session->AddPlayer(newPlayer, session);
 		return newPlayer->GetToken();
 	}
 
 	//Note geen sessies, maak nieuwe
 	session = std::make_shared<GameSession>();
-	session->SetPhase(GamePhases::PickingCharacters, session);
+	session->SetPhase(GamePhases::NotPlaying, session);
 	auto newPlayer = std::make_shared<Player>(lastToken++, playerName, true);
 		
 	sessions.push_back(session);
-	session->AddPlayer(newPlayer);
+	session->AddPlayer(newPlayer, session);
 	return newPlayer->GetToken();
 }
 
@@ -87,6 +89,7 @@ vector<string> LocalHost::GetCommands(int token)
 	{
 		return session->GetActions(token, session);
 	}
+	return vector<string>();
 }
 
 bool LocalHost::SendMessageToHost(int token, string message)
@@ -117,7 +120,7 @@ string LocalHost::GetMessages(int token)
 	{
 		return session->GetPlayer(token)->GetMessages();
 	}
-	return false;
+	return "";
 }
 
 string LocalHost::GetGameStatus(int token)

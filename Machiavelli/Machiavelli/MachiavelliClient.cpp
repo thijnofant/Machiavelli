@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MachiavelliClient.h"
-#include <thread>
+#include "IHostConnection.h"
 
 int __WAITTIME__ = 1000; //Note: wait time in run
 

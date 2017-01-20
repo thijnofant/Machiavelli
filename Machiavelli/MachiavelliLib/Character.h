@@ -1,6 +1,7 @@
 #pragma once
-#include <map>
 
+//todo haal deze uit een file
+//todo lambda mischien?
 enum Character
 {
 	Moordenaar = 1,
@@ -13,7 +14,7 @@ enum Character
 	Condottiere = 8,
 };
 
-static std::map<Character, string> chararacterEnumToString = { {Moordenaar,"Moordenaar"},{ Dief,"Dief" },{ Magier,"Magier" },{ Koning,"Koning" },{ Prediker,"Prediker" },{ Koopman,"Koopman" },{ Bouwmeester,"Bouwmeester" },{ Condottiere,"Condottiere" }, };
-static std::map<string, Character> chararacterStringToEnum = { {"Moordenaar", Moordenaar },{"Dief", Dief },{"Magier", Magier },{ "Koning" ,Koning },{ "Prediker",Prediker },{ "Koopman",Koopman },{ "Bouwmeester",Bouwmeester },{ "Condottiere",Condottiere }, };
+static map<Character, string> chararacterEnumToString = { {Moordenaar,"Moordenaar"},{ Dief,"Dief" },{ Magier,"Magier" },{ Koning,"Koning" },{ Prediker,"Prediker" },{ Koopman,"Koopman" },{ Bouwmeester,"Bouwmeester" },{ Condottiere,"Condottiere" }, };
+static map<string, Character> chararacterStringToEnum = { {"Moordenaar", Moordenaar },{"Dief", Dief },{"Magier", Magier },{ "Koning" ,Koning },{ "Prediker",Prediker },{ "Koopman",Koopman },{ "Bouwmeester",Bouwmeester },{ "Condottiere",Condottiere }, };
 
 
