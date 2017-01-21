@@ -128,6 +128,7 @@ bool GameSession::AddPlayer(shared_ptr<Player> newPlayer, shared_ptr<GameSession
 		}
 
 		this->players.push_back(newPlayer);
+		newPlayer->GiveMoney(this->TakeMoney(2));
 		if (IsFull())
 		{
 			SetPhase(PickingCharacters, session);
