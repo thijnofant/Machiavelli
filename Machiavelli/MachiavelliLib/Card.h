@@ -73,12 +73,18 @@ public:
 
 	string GetName() const;
 	int GetCost() const;
+	int GetValue() const;
 	CardColour GetColour() const;
 };
 
 inline std::ostream& operator<<(std::ostream& os, const Card& obj)
 {
-	// stream obj's data into os
+	os << obj.name << ';';
+	os << to_string(obj.cost) << ';';
+	os << to_string(obj.pointValue) << ';';
+	os << CardColourEnumToString.at(obj.colour) << ';';
+	os << obj.text << ';';
+	os << (obj.destructable ? "1":"0");
 	return os;
 }
 

@@ -22,5 +22,6 @@ public:
 	bool SendMessageToHost(int token, string message) override;
 	bool Disconect(int token) override;
 	string GetMessages(int token) override;
+	void LoadGameSessions(string folder, string fileName);
 };
 

@@ -1,4 +1,2 @@
-  GameSession.cpp
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(157): warning C4018: '>=': signed/unsigned mismatch
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(273): warning C4018: '>=': signed/unsigned mismatch
+﻿  LocalHost.cpp
   MachiavelliLib.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\MachiavelliLib.lib

@@ -8,9 +8,9 @@ class CardGenerator
 public:
 	CardGenerator();
 	~CardGenerator();
-	static vector<Card> CreateAndGetAllCards(GameSession* session);
-	static void AddCardXTimes(Card card, vector<Card> &deck, int amountOfTimes);
+	static deque<Card> CreateAndGetAllCards(GameSession* session);
+	static void AddCardXTimes(Card card, deque<Card> &deck, int amountOfTimes);
 
-	static vector<Card> BuildDeckFromFile(string fileName);
+	static deque<Card> BuildDeckFromFile(string fileName);
 };
 

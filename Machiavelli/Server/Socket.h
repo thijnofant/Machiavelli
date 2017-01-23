@@ -74,9 +74,19 @@ public:
 class ServerSocket : public Socket
 //=============================================================================
 {
+private:
+	bool accept_nonblock(SOCKET &sock, sockaddr &client_addr);
 public:
     ServerSocket(int port);
     Socket accept();
+	template<typename Callback>
+	void accept2(Callback callback) {
+		SOCKET fd;
+		sockaddr client_addr;
+		if (accept_nonblock(fd, client_addr)) {
+			callback(Socket{ fd, client_addr });
+		}
+	};
 };
 
 //=============================================================================

@@ -8,5 +8,8 @@ public:
 	bool HandleAction(int token, string message, shared_ptr<GameSession> session) override;
 	vector<string> GetActions(int token, shared_ptr<GameSession> session) override;
 	bool IsItMyTurn(int token, shared_ptr<GameSession> session) override;
+
+	//stream functions
+	friend std::ostream& operator<<(std::ostream& os, const NotPlayingPhase& obj);
 };
 

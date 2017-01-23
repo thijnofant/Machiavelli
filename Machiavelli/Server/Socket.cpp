@@ -7,6 +7,7 @@
 //=============================================================================
 
 #include "stdafx.h"
+
 #include "Socket.h"
 #include "throw.h"
 #include <iostream>
@@ -129,6 +130,7 @@ char Socket::read() const
     return c;
 }
 
+
 std::string Socket::readline() const
 {
     // read a line: ignore '\r', stop at '\n'
@@ -142,6 +144,7 @@ std::string Socket::readline() const
     }
     return line;
 }
+
 
 void Socket::write(const std::string& msg) const
 {
@@ -235,11 +238,26 @@ Socket ServerSocket::accept()
     client_addr.sa_family = AF_INET;
     socklen_t len = sizeof(client_addr);
     SOCKET fd;
-    throw_if_min1(fd = ::accept(sock, &client_addr, &len));
+    throw_if_min1(fd = ::accept(sock, &client_addr, &len)); //causes blocking
     Socket client {fd, client_addr};
     std::cerr << "Connection accepted from " << client.get_dotted_ip() << ", with socket " << fd << '\n';
     return client;
 }
+
+bool ServerSocket::accept_nonblock(SOCKET &sock_out, sockaddr &client_addr) {
+	client_addr.sa_family = AF_INET;
+	socklen_t len = sizeof(client_addr);
+	sock_out = ::accept(sock, &client_addr, &len);
+#if HAVE_POSIX
+	if (sock_out < 0) {
+#else
+	if (sock_out == INVALID_SOCKET) {
+#endif
+		//throw_unless_would_block();
+		return false;
+	}
+	return true;
+	}
 
 #pragma mark ClientSocket
 

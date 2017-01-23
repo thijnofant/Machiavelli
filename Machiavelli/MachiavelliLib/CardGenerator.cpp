@@ -12,11 +12,9 @@ CardGenerator::~CardGenerator()
 {
 }
 
-vector<Card> CardGenerator::CreateAndGetAllCards(GameSession* session)
+deque<Card> CardGenerator::CreateAndGetAllCards(GameSession* session)
 {
-	//todo haal deze uit een file
-	//todo lambda mischien voor de paarse kaarten?
-	vector<Card> r_vector;
+	deque<Card> r_vector;
 	//Rode kaarten
 	{
 		AddCardXTimes(Card{ "Wachttoren",1,1,CardColour::Red }, r_vector, 3);
@@ -66,7 +64,7 @@ vector<Card> CardGenerator::CreateAndGetAllCards(GameSession* session)
 	return r_vector;
 }
 
-void CardGenerator::AddCardXTimes(Card card, vector<Card>& deck, int amountOfTimes)
+void CardGenerator::AddCardXTimes(Card card, deque<Card>& deck, int amountOfTimes)
 {
 	for (size_t i = 0; i < amountOfTimes; i++)
 	{
@@ -74,10 +72,10 @@ void CardGenerator::AddCardXTimes(Card card, vector<Card>& deck, int amountOfTim
 	}
 }
 
-vector<Card> CardGenerator::BuildDeckFromFile(string fileName)
+deque<Card> CardGenerator::BuildDeckFromFile(string fileName)
 {
 	std::ifstream is(fileName);
-	vector<Card> _deck;
+	deque<Card> _deck;
 	Card newCard;
 	//NOTE: if failbit set, does not enter while.
 	while (is >> newCard)

@@ -27,3 +27,9 @@ bool NotPlayingPhase::IsItMyTurn(int token, shared_ptr<GameSession> session)
 {
 	return false;
 }
+
+std::ostream& operator<<(std::ostream& os, const NotPlayingPhase& obj)
+{
+	//todo set NotPlaying in de stream
+	return os;
+}

@@ -1,0 +1,18 @@
+sessionStart
+deckstart
+see cards
+deckend
+discardstart
+std::deque<Card> discardPile;
+discardend
+playersstart
+exportplayer
+playersend
+startphase
+todo phase stuff
+endphase
+amountOfMoneyInBank;amountOfPlayers;gameOver;currentPlayerToken
+sessionEnd
+etc voor meerdere sessies
+end
+

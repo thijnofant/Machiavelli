@@ -6,6 +6,8 @@
 //  Revised by Jeroen de Haas on 22/11/2016
 //  Copyright (c) 2014 Avans Hogeschool, 's-Hertogenbosch. All rights reserved.
 //
+
+//todo use the new non blocking code
 #include "stdafx.h"
 
 #include "LocalHost.h"
@@ -22,13 +24,15 @@ namespace machiavelli {
 	const string prompt{ "machiavelli> " };
 }
 
+static bool serverRunning = true;
+
 const int __WAITTIME__ = 1000; //Note: wait time in run
 static Sync_queue<ClientCommand> commandQueue;
 
 void consume_command(shared_ptr<IHostConnection> host) // runs in its own thread
 {
 	try {
-	 	while (true) {
+	 	while (serverRunning) {
 			ClientCommand command{ commandQueue.get() }; // will block here unless there are still command objects in the queue
 			if (auto clientInfo = command.get_client_info().lock()) {
 				auto &client = clientInfo->get_socket();
@@ -82,7 +86,7 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 		string status;
 		bool running = true;
 
-		while (running) { // game loop
+		while (running && serverRunning) { // game loop
 			try {
 
 				string messages = host->GetMessages(user.GetToken());
@@ -99,7 +103,7 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 					socket << status << "\r\n";
 				}
 
-				if (host->IsItMyTurn(user.GetToken()))
+				if (host->IsItMyTurn(user.GetToken()) && serverRunning)
 				{
 					//get commands
 					auto commands = host->GetCommands(user.GetToken());
@@ -130,21 +134,20 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 							if (commands[inCmd] == "exit")
 							{
 								running = false;
+								serverRunning = false;
 								//todo let other player know 
 								break;
 							}
 							else
 							{
 								cerr << '[' << socket.get_dotted_ip() << " (" << socket.get_socket() << ") " << user.get_name() << "] " << commands[inCmd] << "\r\n";
-								//
-
 								host->SendMessageToHost(user.GetToken(), commands[inCmd]);
 								break;
 							}
 						}
 						else
 						{
-							socket << "The entered value wasn't a command available at this time. Please enter the numeric value before the command." << "\r\n";
+							socket << "The entered value isn't a command available at this time. Please enter the numeric value in front of the command." << "\r\n";
 						}
 					}
 				}
@@ -178,17 +181,25 @@ int main(int argc, const char * argv[])
 	// create a server socket
 	ServerSocket server{ machiavelli::tcp_port };
 
-	while (true) {
+	while (serverRunning) {
 		try {
-			while (true) {
+			while (serverRunning) {
 				// wait for connection from client; will create new socket
 				cerr << "server listening on localhost:"<< machiavelli::tcp_port << '\n';
 				cerr << "Please use a telnet client to connect \n";
-				Socket client{ server.accept() };
+				//Socket client{ server.accept() };
+
+				server.accept2([host](Socket client) {
+					std::cerr << "Connection accepted from " << client.get_dotted_ip() << "\n";
+					thread handler{ handle_client, move(client), host };
+					handler.detach(); // detaching is usually ugly, but in this case the right thing to do
+				});
+
 
 				// communicate with client over new socket in separate thread
-				thread handler{ handle_client, move(client), host };
-				handler.detach(); // detaching is usually ugly, but in this case the right thing to do
+				
+
+				this_thread::sleep_for(chrono::milliseconds(100));
 			}
 		}
 		catch (const exception& ex) {

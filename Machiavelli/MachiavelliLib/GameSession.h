@@ -18,24 +18,22 @@ class GameSession
 {
 private:
 	int amountOfMoneyInBank;
-	vector<Card> deck; //todo kijk naar dequeu
-	vector<Card> discardPile;
-	vector<Character> characters;
-	vector<Character> characterDiscardPile;
+	std::deque<Card> deck;
+	std::deque<Card> discardPile;
 	vector<shared_ptr<Player>> players;
 	int amountOfPlayers;
 	bool gameOver;
 
 	shared_ptr<Player> currentPlayer;
 	unique_ptr<GamePhase> currentPhase;
-	int phaseStep;
 
 public:
 	 GameSession(int amountOfPlayers = 2);
 	~GameSession();
 	bool IsFull() const;
 	shared_ptr<Player> GetPlayer(int token);
-	shared_ptr<Player> GetPlayer(string playerName);
+	shared_ptr<Player> GetPlayer(string playerName) const;
+	vector<shared_ptr<Player>> GetPlayers() const;
 	string GetStatus();
 	string GetStatus(int token);
 	bool ContainsPlayer(int token);
@@ -58,6 +56,13 @@ public:
 	bool IsGameOver() const;
 	void SetGameOver(bool isGameOver);
 	void SendAllPlayersMessage(string message);
-	vector<Card> DrawCards(int amount);
+	deque<Card> DrawCards(int amount);
+	void AddCardsToDeck(deque<Card> cards);
+	void ShuffleDeck();
+
+
+	//stream functions
+	friend std::ostream& operator<<(std::ostream& os, const GameSession& obj);
+	friend std::istream& operator>>(std::istream& is, GameSession& obj);
 };
 

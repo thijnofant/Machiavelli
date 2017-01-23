@@ -19,6 +19,11 @@ int Card::GetCost() const
 	return cost;
 }
 
+int Card::GetValue() const
+{
+	return pointValue;
+}
+
 CardColour Card::GetColour() const
 {
 	return colour;

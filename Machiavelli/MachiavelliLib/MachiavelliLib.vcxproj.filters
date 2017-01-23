@@ -41,11 +41,11 @@
     <ClCompile Include="PickingCharactersPhase.cpp">
       <Filter>HostDomainClasses\GamePhases</Filter>
     </ClCompile>
-    <ClCompile Include="CardFactory.cpp">
-      <Filter>HostDomainClasses</Filter>
-    </ClCompile>
     <ClCompile Include="NotPlayingPhase.cpp">
       <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterGenerator.cpp">
+      <Filter>HostDomainClasses</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,11 +84,11 @@
     <ClInclude Include="PickingCharactersPhase.h">
       <Filter>HostDomainClasses\GamePhases</Filter>
     </ClInclude>
-    <ClInclude Include="CardFactory.h">
-      <Filter>HostDomainClasses</Filter>
-    </ClInclude>
     <ClInclude Include="NotPlayingPhase.h">
       <Filter>HostDomainClasses\GamePhases</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterGenerator.h">
+      <Filter>HostDomainClasses</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

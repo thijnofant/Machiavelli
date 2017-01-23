@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "ExecutingPhase.h"
+#include "CardGenerator.h"
 
-ExecutingPhase::ExecutingPhase(shared_ptr<GameSession> session) : amountBuiltThisTurn{ 0 }, characterActionUsed{false}, currentlyBuilding(false)
+ExecutingPhase::ExecutingPhase(shared_ptr<GameSession> session) : amountBuiltThisTurn{ 0 }, characterActionUsed{ false }, currentlyBuilding(false), selectingCharacter{ false }, discardingCardsFromBuffer{false}, condottiereSelectingPlayer{false}, magierTrading{false}, buildingsSafeFromCondottiere{false}
 {
 	subPhase = 0;
 	HandTurnToNextCharacter(session);
@@ -14,32 +15,48 @@ ExecutingPhase::~ExecutingPhase()
 
 bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSession> session)
 {
-	auto player = session->GetCurrentPlayer();
+	auto currentPlayer = session->GetCurrentPlayer();
 
 	if (currentlyBuilding)
 	{
-		if(player->BuildCard(message))
+		int cost = currentPlayer->BuildCard(message);
+		if(cost != -1)
 		{
-			currentlyBuilding = false;
+			session->GiveMoney(cost);
 			amountBuiltThisTurn++;
 		}
+		currentlyBuilding = false;
 	}
 
 	if (message == "Draw Cards")
 	{	
-		//todo test afhankelijk maken van of Observatorium in de village van de huidige speler zit (default 2 trekken, met Observatorium 3 trekken)
-		int drawAmount = player->HasCardInVillage("Observatorium") ? 3 : 2;
-		//todo draw naar een buffer zodat er kaarten weggegooid kunnen worden en daarna geflushed kan worden naar hand (default tot <=1 over, met bibliotheek tot <=2 over)
+		int drawAmount = currentPlayer->HasCardInVillage("Observatorium") ? 3 : 2;
+		cardBuffer = session->DrawCards(drawAmount);
+		discardingCardsFromBuffer = true;
 
-		player->GiveCards(session->DrawCards(drawAmount));
-		subsubPhase++;
+		int amountOfCardsToDiscard = cardBuffer.size() - (currentPlayer->HasCardInVillage("Bibliotheek") ? 2 : 1);
+		if (amountOfCardsToDiscard >= 0)
+		{
+			currentPlayer->SendMessage("Select " + to_string(amountOfCardsToDiscard) + " card(s) to discard.");
+		}
 		return true;
 	}
+
+	if (discardingCardsFromBuffer)
+	{
+		auto it = std::find_if(cardBuffer.begin(), cardBuffer.end(), [message](Card a)->bool { return a.GetName() == message; });
+
+		if (it != cardBuffer.end()) {
+			cardBuffer.erase(it);
+		}
+		return true;
+	}
+
 	if (message == "Take Money")
 	{
 		int moneyTaken = session->TakeMoney(2);
-		player->GiveMoney(moneyTaken);
-		player->SendMessage("You took " + std::to_string(moneyTaken) + " coins from the bank.");
+		currentPlayer->GiveMoney(moneyTaken);
+		currentPlayer->SendMessage("You took " + std::to_string(moneyTaken) + " coins from the bank.");
 		subsubPhase++;
 		return true;
 	}
@@ -53,104 +70,223 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 		this->HandTurnToNextCharacter(session);
 		return true;
 	}
+	
+	if (selectingCharacter)
+	{
+		if (subPhase == Moordenaar)
+		{
+			charToKill = characterStringToEnum[message];
+		}
+		if (subPhase == Dief)
+		{
+			charToRob = characterStringToEnum[message];
+		}
+		selectingCharacter = false;
+		return true;
+	}
 
 	if (message == "Moordenaar")
 	{
 		characterActionUsed = true;
+		selectingCharacter = true;
 		return true;
-		//todo zorg voor een manier om te vragen om characters om te doden
 	}
 	if(message == "Dief")
 	{
 		characterActionUsed = true;
-		//todo zorg voor een manier om te vragen om characters om te bestelen
+		selectingCharacter = true;
 		return true;
 	}
 	if (message == "Magier")
 	{
 		characterActionUsed = true;
-		//todo voer magier uit
+		magierTrading = true;
+		currentPlayer->SendMessage("Select who to trade with.");
+		
 		return true;
 	}
+
+	if (magierTrading)
+	{
+		if (message == "Deck")
+		{
+			currentPlayer->GetHand().size();
+			cardBuffer = session->DrawCards(currentPlayer->GetHand().size());
+			session->AddCardsToDeck(currentPlayer->GetHand());
+			session->ShuffleDeck();
+			currentPlayer->ClearHand();	
+			currentPlayer->GiveCards(cardBuffer);
+			cardBuffer.clear();
+			magierTrading = false;
+			return true;
+		}
+		if (session->GetPlayer(message))
+		{
+			auto tradingPartner = session->GetPlayer(message);
+			cardBuffer = tradingPartner->GetHand();
+			tradingPartner->ClearHand();
+			tradingPartner->GiveCards(currentPlayer->GetHand());
+			currentPlayer->ClearHand();
+			currentPlayer->GiveCards(cardBuffer);
+			cardBuffer.clear();
+			magierTrading = false;
+			return true;
+		}
+		
+		return false;
+	}
+
 	if (message == "Koning")
 	{
 		characterActionUsed = true;
-		//todo voer Koning uit
+		session->MakeKing(currentPlayer->GetToken());
+
+		int moneyTaken = currentPlayer->HasCardInVillage("School voor magiërs") ? 1 : 0;
+		moneyTaken += currentPlayer->GetAmountOfColourInVillage(Yellow);
+
+		currentPlayer->GiveMoney(session->TakeMoney(moneyTaken));
+		currentPlayer->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Koning's effect.");
 		return true;
 	}
 	if (message == "Prediker")
 	{
 		characterActionUsed = true;
-		//todo voer Prediker uit
+
+		int moneyTaken = currentPlayer->HasCardInVillage("School voor magiërs") ? 1 : 0;
+		moneyTaken += currentPlayer->GetAmountOfColourInVillage(Blue);
+		currentPlayer->GiveMoney(session->TakeMoney(moneyTaken));
+		currentPlayer->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Prediker's effect.");
+		buildingsSafeFromCondottiere = true;
 		return true;
 	}
 	if (message == "Koopman")
 	{
 		characterActionUsed = true;
-		//todo voer Koopman uit
+		int moneyTaken = currentPlayer->HasCardInVillage("School voor magiërs") ? 1 : 0;
+		moneyTaken += currentPlayer->GetAmountOfColourInVillage(Green) + 1;
+		currentPlayer->GiveMoney(session->TakeMoney(moneyTaken));
+		currentPlayer->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Koopman's effect.");
 		return true;
 	}
 	if (message == "Bouwmeester")
 	{
 		characterActionUsed = true;
-		//todo voer Bouwmeester uit
+		auto cards = session->DrawCards(2);
+		session->GetCurrentPlayer()->GiveCards(cards);
 		return true;
 	}
 	if (message == "Condottiere")
 	{
 		characterActionUsed = true;
-		//todo voer Condottiere uit
-		//todo kies een gebouw om te vernietigen
-		//todo controleer of dat gebouw vernietigd kan worden
+		int moneyTaken = currentPlayer->HasCardInVillage("School voor magiërs") ? 1 : 0;
+		moneyTaken += currentPlayer->GetAmountOfColourInVillage(Red);
+		currentPlayer->GiveMoney(session->TakeMoney(moneyTaken));
+		currentPlayer->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Condottiere's effect.");
+
+		if (buildingsSafeFromCondottiere)
+		{
+			session->SendAllPlayersMessage("The prediker saved all buildings from being destroyed by the condotierre.");
+			return true;
+		}
+
+		condottiereSelectingPlayer = true;
 		return true;
 	}
 
-	//todo kaart effecten
-	//todo implement this
-	return true;
+	if (condottiereSelectingPlayer)
+	{
+		if (session->GetPlayer(message))
+		{
+			selectedCharacterToken = session->GetPlayer(message)->GetToken();
+			condottiereSelectingPlayer = false;
+			condottiereSelectingBuilding = true;
+			return true;
+		}
+	}
+
+	if (condottiereSelectingBuilding)
+	{
+		condottiereSelectingBuilding = false;
+		session->GetPlayer(selectedCharacterToken)->DestroyBuildingFromVilage(message);
+
+		//todo init kerkhof
+		return true;
+	}
+
+	if (message == "Smederij" && currentPlayer->HasCardInVillage("Smederij"))
+	{
+		if (currentPlayer->GetAmountOfCoins() >= 3)
+		{
+			session->GiveMoney(3); 
+			currentPlayer->SpendMoney(3);
+			currentPlayer->GiveCards(session->DrawCards(2));
+			smederijUsed = true;
+		}
+		else
+		{
+			currentPlayer->SendMessage("You currently don't have the 3 gold needed to spend to use this card.");
+		}
+		return true;
+	}
+
+	if (laboratoriumDiscarding)
+	{
+		currentPlayer->DiscardCardWithNameFromHand(message);
+		currentPlayer->GiveMoney(session->TakeMoney(1));
+		laboratoriumDiscarding = false;
+		laboratoriumUsed = true;
+	}
+
+	if (message == "Laboratorium" && currentPlayer->HasCardInVillage("Laboratorium"))
+	{
+		if(currentPlayer->GetHand().size() >= 1)
+		{
+			currentPlayer->SendMessage("Pick a Card to discard");
+			laboratoriumDiscarding = true;
+		}
+		else
+		{
+			currentPlayer->SendMessage("You need at least 1 card in your hand to use this card.");
+			laboratoriumDiscarding = false;
+		}
+		return true;
+	}
+
+	return false;
 }
 
 vector<string> ExecutingPhase::GetActions(int token, shared_ptr<GameSession> session)
-{
-	//todo return a list of commands that can be excecuted by the player at this point
-	
-	//todo smederij
-	//todo kerkhof
+{	
+	auto currentPlayer = session->GetCurrentPlayer();
 	vector<string> re_vector;
 
 	if (subsubPhase == 1)
 	{
-		re_vector.push_back("Draw Cards");
-		re_vector.push_back("Take Money");
-		auto player = session->GetPlayer(token);
-
-		//todo test geef geld van Koning, Prediker, Koopman, Condottiere. bij School van magiers, 1 extra goudstuk
-		int moneyTaken = player->HasCardInVillage("School voor magiers")?1:0;
-		switch (subPhase)
+		if (!discardingCardsFromBuffer)
 		{
-		case Koning:
-			moneyTaken += player->GetAmountOfColourInVillage(Yellow);
-			player->GiveMoney(moneyTaken);
-			player->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Koning's effect.");
-			break;
-		case Prediker:
-			moneyTaken += player->GetAmountOfColourInVillage(Blue);
-			player->GiveMoney(moneyTaken);
-			player->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Prediker's effect.");
-			break;
-		case Koopman:
-			moneyTaken += player->GetAmountOfColourInVillage(Green);
-			player->GiveMoney(moneyTaken);
-			player->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Koopman's effect.");
-			break;
-		case Condottiere:
-			moneyTaken += player->GetAmountOfColourInVillage(Red);
-			player->GiveMoney(moneyTaken);
-			player->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Condottiere's effect.");
-			break;
+			re_vector.push_back("Draw Cards");
+			re_vector.push_back("Take Money");
 		}
-		
+		else
+		{
+			int maxSize = currentPlayer->HasCardInVillage("Bibliotheek") ? 2:1;
+			if (cardBuffer.size() <= maxSize )
+			{
+				currentPlayer->GiveCards(cardBuffer);
+				cardBuffer.clear();
+				subsubPhase++;
+				discardingCardsFromBuffer = false;
+			}
+			else
+			{
+				for (auto card : cardBuffer)
+				{
+					re_vector.push_back(card.GetName());
+				}
+			}
+		}
 	}
+
 	if (subsubPhase == 2)
 	{
 		if (currentlyBuilding)
@@ -159,10 +295,8 @@ vector<string> ExecutingPhase::GetActions(int token, shared_ptr<GameSession> ses
 			{
 				re_vector.push_back(card.GetName());
 			}
-			//todo loop door hand heen en vind een kaart met een naam die klopt met de message
 		}
 		else {
-			//todo test
 			//kijk of speler nog mag bouwen
 			if (subPhase == Bouwmeester && amountBuiltThisTurn < 3)
 			{
@@ -176,7 +310,6 @@ vector<string> ExecutingPhase::GetActions(int token, shared_ptr<GameSession> ses
 	}	
 
 	//Note als character niet dood is en nog niet zijn actie heeft uitgevoerd kan hij actie nog uitvoeren
-	//todo moordenaar werkt niet?
 	if (!WasCharKilled(subPhase) && !characterActionUsed)
 		{
 		switch (subPhase)
@@ -192,7 +325,6 @@ vector<string> ExecutingPhase::GetActions(int token, shared_ptr<GameSession> ses
 			break;
 		case Koning:
 			re_vector.push_back("Koning");
-			session->MakeKing(token);
 			break;
 		case Prediker:
 			re_vector.push_back("Prediker");
@@ -209,10 +341,73 @@ vector<string> ExecutingPhase::GetActions(int token, shared_ptr<GameSession> ses
 		}
 	}
 
+	if (selectingCharacter)
+	{
+		if( false )
+		{
+			re_vector.push_back("Moordenaar");
+		}
+
+		if( subPhase == Moordenaar )
+		{
+			re_vector.push_back("Dief");
+		}
+
+		re_vector.push_back("Magier");
+		re_vector.push_back("Koning");
+		re_vector.push_back("Prediker");
+		re_vector.push_back("Koopman");
+		re_vector.push_back("Bouwmeester");
+		re_vector.push_back("Condotiere");
+	}
+
+	if (magierTrading || condottiereSelectingPlayer)
+	{
+		for (auto player : session->GetPlayers())
+		{
+			if (!player->GetToken() == currentPlayer->GetToken())
+			{
+				re_vector.push_back(player->GetPlayerName());
+			}
+		}
+		if( magierTrading )
+			re_vector.push_back("Deck");
+	}
+
+	if (condottiereSelectingBuilding)
+	{
+		if (session->GetPlayer(selectedCharacterToken)->GetVillage().size() >= 8)
+		{
+			session->SendAllPlayersMessage("You can't destroy a building from a village with 8 or more buildings");
+			condottiereSelectingBuilding = false;
+		}
+
+		for (auto building : session->GetPlayer(selectedCharacterToken)->GetVillage())
+		{
+			re_vector.push_back(building.GetName());
+		}
+	}
+
+	if (currentPlayer->HasCardInVillage("Smederij") && !smederijUsed)
+	{
+		re_vector.push_back("Smederij");
+	}
+
+	if (currentPlayer->HasCardInVillage("Laboratorium") && !laboratoriumUsed)
+	{
+		re_vector.push_back("Laboratorium");
+	}	
+
+	if (laboratoriumDiscarding)
+	{
+		for (auto card : session->GetCurrentPlayer()->GetHand())
+		{
+			re_vector.push_back(card.GetName());
+		}
+	}
+
 	re_vector.push_back("End Turn");
 	return re_vector;
-
-	//todo implement this
 }
 
 void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
@@ -222,9 +417,14 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 		auto player = session->GetCurrentPlayer();
 		if (player->GetVillage().size() >= 8)
 		{
-			session->SetGameOver(true);
+			if (!session->IsGameOver())
+			{
+				player->SetWasFirstToEight(true);
+				session->SetGameOver(true);
+			}
 		}
 	}
+
 	if (subPhase == 8)
 	{
 		session->SetCurrentPlayer(session->GetKing());
@@ -232,14 +432,37 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 		return;
 	}
 
+
+
 	subPhase++;
 	subsubPhase = 1;
+
+	charToKill = 0;
+	charToRob = 0;
 	amountBuiltThisTurn = 0;
+
 	characterActionUsed = false;
 	currentlyBuilding = false;
 
+	selectingCharacter = false;
+
+	tradingCards = false;
+
+	discardingCardsFromBuffer = false;
+
+	condottiereSelectingPlayer = false;
+	condottiereSelectingBuilding = false;
+	selectedCharacterToken = 0;
+
+	magierTrading = false;
+	smederijUsed = false;
+	laboratoriumUsed = false;
+	laboratoriumDiscarding = false;
+
+	cardBuffer.clear();
+
 	auto player = session->GetPlayerWithCharacter(static_cast<Character>(subPhase));
-	bool done = player != nullptr;
+	bool done = player != nullptr && !WasCharKilled(subPhase);
 
 	while (!done)
 	{
@@ -251,7 +474,7 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 			return;
 		}
 
-		if (WasCharKilled(subPhase)) //todo test this
+		if (WasCharKilled(subPhase))
 		{
 			done = false;
 			continue;
@@ -260,10 +483,76 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 		player = session->GetPlayerWithCharacter(static_cast<Character>(subPhase));	
 		done = player != nullptr;
 	}
+
+	if (WasCharRobbed(subPhase))
+	{
+		int amountOfMoney = player->GetAmountOfCoins();
+		player->SpendMoney(amountOfMoney);
+		player->SendMessage("The thief stole " + std::to_string(amountOfMoney) + " from you.");
+		session->GetCurrentPlayer()->GiveMoney(amountOfMoney);
+		session->GetCurrentPlayer()->SendMessage("You stole " + std::to_string(amountOfMoney) + ".");
+	}	
+
 	session->SetCurrentPlayer(player);
 }
 
 bool ExecutingPhase::IsItMyTurn(int token, shared_ptr<GameSession> session)
 {
 	return  session->GetPlayerWithCharacter(static_cast<Character>(subPhase)) == session->GetPlayer(token);
+}
+
+std::ostream& operator<<(std::ostream& os, const ExecutingPhase& obj)
+{
+	//todo set PickingCharacters in de stream
+	//todo rest of this function
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, ExecutingPhase& obj)
+{
+	string line;
+
+	//subPhase;subsubPhase;charToKill;charToRob;amountBuiltThisTurn;characterActionUsed;currentlyBuilding;selectingCharacter;tradingCards;discardingCardsFromBuffer;condottiereSelectingPlayer;condottiereSelectingBuilding;selectedCharacterToken;magierTrading;buildingsSafeFromCondottiere;smederijUsed;laboratoriumUsed;laboratoriumDiscarding
+	{
+		getline(is, line);
+
+		if (line.empty())
+		{
+			is.setstate(std::ios::badbit);
+			return is;
+		}
+
+		string segment;
+		std::vector<std::string> seglist;
+		std::stringstream temp(line);
+		while (getline(temp, segment, ';'))
+		{
+			seglist.push_back(segment);
+		}
+
+		obj.subPhase = stoi(seglist[0]);
+		obj.subsubPhase = stoi(seglist[1]);
+		obj.charToKill = stoi(seglist[2]);
+		obj.charToRob = stoi(seglist[3]);
+		obj.amountBuiltThisTurn = stoi(seglist[4]);
+		obj.characterActionUsed = seglist[5] == "1";
+		obj.currentlyBuilding = seglist[6] == "1";
+		obj.selectingCharacter = seglist[7] == "1";
+		obj.tradingCards = seglist[8] == "1";
+		obj.discardingCardsFromBuffer = seglist[9] == "1";
+		obj.condottiereSelectingPlayer = seglist[10] == "1";
+		obj.condottiereSelectingBuilding = seglist[11] == "1";
+		obj.selectedCharacterToken = seglist[12] == "1";
+		obj.magierTrading = seglist[13] == "1";
+		obj.buildingsSafeFromCondottiere = seglist[14] == "1";
+		obj.smederijUsed = seglist[15] == "1";
+		obj.laboratoriumUsed = seglist[16] == "1";
+		obj.laboratoriumDiscarding = seglist[17] == "1";
+	}
+
+	//cardbuffer
+	getline(is, line);
+	obj.cardBuffer = CardGenerator::BuildDeckFromFile(line);
+
+	return is;
 }

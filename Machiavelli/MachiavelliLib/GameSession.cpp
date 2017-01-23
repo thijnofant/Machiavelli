@@ -13,8 +13,8 @@ GameSession::GameSession(int amountOfPlayers) :
 	deck(CardGenerator::BuildDeckFromFile("../cards.txt"))
 {
 //	deck = CardGenerator::CreateAndGetAllCards(this);
-	
-	std::shuffle(std::begin(deck), std::end(deck), Util::GetRandomEngine());
+
+	this->ShuffleDeck();	
 }
 
 GameSession::~GameSession()
@@ -33,7 +33,7 @@ shared_ptr<Player> GameSession::GetPlayer(int token)
 	return nullptr;
 }
 
-shared_ptr<Player> GameSession::GetPlayer(string userName)
+shared_ptr<Player> GameSession::GetPlayer(string userName) const
 {
 	for (auto player : players)
 	{
@@ -43,6 +43,11 @@ shared_ptr<Player> GameSession::GetPlayer(string userName)
 		}
 	}
 	return nullptr;
+}
+
+vector<shared_ptr<Player>> GameSession::GetPlayers() const
+{
+	return players;
 }
 
 string GameSession::GetStatus()
@@ -56,11 +61,12 @@ string GameSession::GetStatus()
 
 	status << "\r\n  Amount of money left in bank: " << amountOfMoneyInBank << "\r\n";
 
-	//todo temp for debug print all cards in deck
-	for (auto card : deck)
+	//for debug print all cards in deck
+	/*for (auto card : deck)
 	{
 		status << card.GetName() << " ";
-	}
+	}*/
+
 	status << "\r\n";
 
 	for (auto player : players)
@@ -168,11 +174,52 @@ void GameSession::SetPhase(GamePhases phase, shared_ptr<GameSession> session)
 
 	if (gameOver)
 	{
-		//todo end game
-		//todo tally scores
-		//todo als speler Hof der wonderen heeft vraag om welke kleur deze moet worden
-		//todo message players with scores
-		//todo go to final phase
+		map<shared_ptr<Player>, int> scores;
+		for (auto player : players)
+		{
+			scores[player] = 0;
+
+			int numberOfDiferentCollors = 0 + (player->GetAmountOfColourInVillage(Yellow) >= 1 ? 0 : 1) + (player->GetAmountOfColourInVillage(Blue) >= 1 ? 0 : 1) +
+				(player->GetAmountOfColourInVillage(Green) >= 1 ? 0 : 1) + (player->GetAmountOfColourInVillage(Red) >= 1 ? 0 : 1) +
+				(player->GetAmountOfColourInVillage(Purple) >= 1 ? 0 : 1);
+			if(player->HasCardInVillage("Hof der Wonderen"))
+				numberOfDiferentCollors++;
+
+			if (numberOfDiferentCollors >= 5)
+			{
+				scores[player] += 3;
+			}
+
+			for (auto card : player->GetVillage())
+			{
+				scores[player] += card.GetValue();
+			}
+
+			if (player->WasFirstToEight()) {
+				scores[player] += 4;
+			}
+			else if (player->GetVillage().size() >= 8)
+			{
+				scores[player] += 2;
+			}
+		}
+
+		shared_ptr<Player> highestScoringPlayer;
+		int highestScore = 0;
+		for (auto pair : scores)
+		{
+			if (pair.second >= highestScore)
+			{
+				highestScore = pair.second;
+				highestScoringPlayer = pair.first;
+			}
+			SendAllPlayersMessage(pair.first->GetPlayerName() + " scored " + to_string(pair.second) + " points.");
+		}
+
+		SendAllPlayersMessage(highestScoringPlayer->GetPlayerName() + "Won");
+		SendAllPlayersMessage("If you want to play again please reconnect to the server.");
+		currentPhase = std::make_unique<NotPlayingPhase>();
+		return;
 	}
 
 	switch (phase)
@@ -301,14 +348,106 @@ void GameSession::SendAllPlayersMessage(string message)
 	}
 }
 
-vector<Card> GameSession::DrawCards(int amount)
+deque<Card> GameSession::DrawCards(int amount)
 {
-	vector<Card> reVector;
+	deque<Card> reVector;
 	for (int i = 0; i < amount; i++)
 	{
 		Card reCard = deck[0];
-		deck.erase(deck.begin());
+		deck.pop_front();
 		reVector.push_back(reCard);
 	}
 	return reVector;
+}
+
+void GameSession::AddCardsToDeck(deque<Card> cards)
+{
+	for (auto card : cards)
+	{
+		deck.push_back(card);
+	}
+}
+
+void GameSession::ShuffleDeck()
+{
+	std::shuffle(std::begin(deck), std::end(deck), Util::GetRandomEngine());
+}
+
+std::ostream& operator<<(std::ostream& os, const GameSession& obj)
+{
+	//todo this
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, GameSession& obj)
+{
+	string line = "";
+
+	getline(is, line);
+
+	string segment;
+	std::vector<std::string> seglist;
+	std::stringstream temp(line);
+	while (getline(temp, segment, ';'))
+	{
+		seglist.push_back(segment);
+	}
+
+	obj.amountOfMoneyInBank = stoi(seglist[0]);
+	obj.amountOfPlayers = stoi(seglist[1]);
+	obj.gameOver = seglist[2] == "1";
+	int currentPlayerToken = stoi(seglist[3]);
+
+
+	//GetDeck
+	getline(is, line);
+	obj.deck = CardGenerator::BuildDeckFromFile(line);
+
+	//GetDiscardPile
+	getline(is, line);
+	obj.discardPile = CardGenerator::BuildDeckFromFile(line);
+
+	//GetPlayers
+	for (int i = 0; i < obj.amountOfPlayers; i++)
+	{
+		getline(is, line);
+
+		shared_ptr<Player> player = std::make_shared<Player>();
+		std::ifstream playerFileStream(line);
+		playerFileStream >> *player;
+
+		obj.players.push_back(player);
+
+		playerFileStream.close();
+	}
+
+	//GetPhase
+	{
+		getline(is, line);
+		std::ifstream sessionFileStream(line);
+
+		string sessionFileFirstLine;
+		getline(sessionFileStream, sessionFileFirstLine);
+
+		if (sessionFileFirstLine == "NotPlaying")
+		{
+			obj.currentPhase = std::make_unique<NotPlayingPhase>();
+		}
+		else if (sessionFileFirstLine == "PickingCharacters")
+		{
+			auto tempphase = new PickingCharactersPhase();
+			sessionFileStream >> *tempphase;
+			obj.currentPhase.reset(tempphase);
+		}
+		else if (sessionFileFirstLine == "Excecuting")
+		{
+			auto tempphase = new ExecutingPhase();
+			sessionFileStream >> *tempphase;
+			obj.currentPhase.reset(tempphase);
+		}
+	}
+
+
+	obj.SetCurrentPlayer(obj.GetPlayer(currentPlayerToken));
+	return is;
 }

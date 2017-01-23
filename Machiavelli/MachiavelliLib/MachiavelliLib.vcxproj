@@ -129,8 +129,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Card.cpp" />
-    <ClCompile Include="CardFactory.cpp" />
     <ClCompile Include="CardGenerator.cpp" />
+    <ClCompile Include="CharacterGenerator.cpp" />
     <ClCompile Include="ExecutingPhase.cpp" />
     <ClCompile Include="GameSession.cpp" />
     <ClCompile Include="LocalHost.cpp" />
@@ -147,9 +147,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Card.h" />
-    <ClInclude Include="CardFactory.h" />
     <ClInclude Include="CardGenerator.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CharacterGenerator.h" />
     <ClInclude Include="ExecutingPhase.h" />
     <ClInclude Include="GamePhase.h" />
     <ClInclude Include="GameSession.h" />

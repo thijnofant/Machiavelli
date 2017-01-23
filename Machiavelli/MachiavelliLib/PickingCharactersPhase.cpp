@@ -34,9 +34,9 @@ bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<
 			if (subPhase == 1|| subPhase == 2)
 				player->ClearCharacters();
 
-			player->Givecharacter(chararacterStringToEnum[message]);
-			availableCharacters.erase(std::remove(availableCharacters.begin(), availableCharacters.end(), chararacterStringToEnum[message]), availableCharacters.end());
-			player->SendMessage("You picked the " + chararacterStringToEnum[message]);
+			player->Givecharacter(characterStringToEnum[message]);
+			availableCharacters.erase(std::remove(availableCharacters.begin(), availableCharacters.end(), characterStringToEnum[message]), availableCharacters.end());
+			player->SendMessage("You picked the " + message);
 			subsubPhase++;
 
 			if (subPhase == 1)
@@ -49,8 +49,8 @@ bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<
 		//player gets to throw away character
 		else if (subsubPhase == 2)
 		{
-			availableCharacters.erase(std::remove(availableCharacters.begin(), availableCharacters.end(), chararacterStringToEnum[message]), availableCharacters.end());
-			player->SendMessage("You discarded the " + chararacterStringToEnum[message]);
+			availableCharacters.erase(std::remove(availableCharacters.begin(), availableCharacters.end(), characterStringToEnum[message]), availableCharacters.end());
+			player->SendMessage("You discarded the " + message);
 						
 			session->NextPlayer();
 
@@ -83,12 +83,12 @@ vector<string> PickingCharactersPhase::GetActions(int token, shared_ptr<GameSess
 				auto pickedChar = availableCharacters[Util::GetRandomNumber(0, availableCharacters.size() - 1)];
 				availableCharacters.erase(std::remove(availableCharacters.begin(), availableCharacters.end(), pickedChar), availableCharacters.end());
 
-				player->SendMessage("The " + chararacterEnumToString[pickedChar] + " was discarded");
+				player->SendMessage("The " + characterEnumToString[pickedChar] + " was discarded");
 				player->SendMessage("Choose a character:");
 
 				for (auto available_character : availableCharacters)
 				{
-					re_vector.push_back(chararacterEnumToString[available_character]);
+					re_vector.push_back(characterEnumToString[available_character]);
 				}
 			}
 		}
@@ -103,7 +103,7 @@ vector<string> PickingCharactersPhase::GetActions(int token, shared_ptr<GameSess
 
 				for (auto available_character : availableCharacters)
 				{
-					re_vector.push_back(chararacterEnumToString[available_character]);
+					re_vector.push_back(characterEnumToString[available_character]);
 				}
 			}
 			//player gets to throw away character
@@ -114,7 +114,7 @@ vector<string> PickingCharactersPhase::GetActions(int token, shared_ptr<GameSess
 
 				for (auto available_character : availableCharacters)
 				{
-					re_vector.push_back(chararacterEnumToString[available_character]);
+					re_vector.push_back(characterEnumToString[available_character]);
 				}
 			}
 		}
@@ -125,4 +125,46 @@ vector<string> PickingCharactersPhase::GetActions(int token, shared_ptr<GameSess
 bool PickingCharactersPhase::IsItMyTurn(int token, shared_ptr<GameSession> session)
 {
 	return session->GetCurrentPlayer() == session->GetPlayer(token);
+}
+
+std::ostream& operator<<(std::ostream& os, const PickingCharactersPhase& obj)
+{
+	//todo set PickingCharacters in de stream
+	//todo make this thing
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, PickingCharactersPhase& obj)
+{
+	string line;
+	getline(is, line);
+
+	if (line.empty())
+	{
+		is.setstate(std::ios::badbit);
+		return is;
+	}
+
+	string segment;
+	std::vector<std::string> seglist;
+	std::stringstream temp(line);
+	while (getline(temp, segment, ';'))
+	{
+		seglist.push_back(segment);
+	}
+
+	//subPhase;subsubPhase
+	{
+		obj.subPhase = stoi(seglist[0]);
+		obj.subsubPhase = stoi(seglist[1]);
+	}
+
+	//vector<Character> availableCharacters;
+	obj.availableCharacters.clear();
+	while(getline(is ,line))
+	{
+		obj.availableCharacters.push_back(characterStringToEnum.at(line));
+	}
+
+	return is;
 }
