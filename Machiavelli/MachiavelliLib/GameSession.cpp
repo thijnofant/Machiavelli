@@ -9,9 +9,9 @@
 
 GameSession::GameSession(int amountOfPlayers) : 
 	amountOfMoneyInBank{ 30 }, 
-	amountOfPlayers{ amountOfPlayers }, 
-	gameOver{ false },
-	deck(CardGenerator::BuildDeckFromFile("../cards.txt"))
+	deck(CardGenerator::BuildDeckFromFile("../cards2.txt")), 
+	amountOfPlayers{ amountOfPlayers },
+	gameOver{ false }
 {
 //	deck = CardGenerator::CreateAndGetAllCards(this);
 
@@ -155,7 +155,7 @@ vector<string> GameSession::GetActions(int token, shared_ptr<GameSession> sessio
 	return currentPhase->GetActions(token, session);
 }
 
-const bool GameSession::IsItMyTurn(int token, shared_ptr<GameSession> session) const
+bool GameSession::IsItMyTurn(int token, shared_ptr<GameSession> session) const
 {
 	if (gameOver)
 	{
@@ -378,11 +378,10 @@ std::ostream& operator<<(std::ostream& os, const GameSession& obj)
 {
 	//session info
 	string firstLine = to_string(obj.amountOfMoneyInBank) + ";" + to_string(obj.amountOfPlayers) + ";" + (obj.gameOver ? "1" : "0") + ";" + to_string(obj.GetCurrentPlayer()->GetToken());
-	string fileName = "";
 	os << firstLine << '\n';
 
 	//deck
-	fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "deck" + LocalHost::Extension;
+	string fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "deck" + LocalHost::Extension;
 	os << fileName << '\n';
 	CardGenerator::BuildFileFromCards(fileName, obj.deck);
 
@@ -474,6 +473,8 @@ std::istream& operator>>(std::istream& is, GameSession& obj)
 		}
 		else if (sessionFileFirstLine == "Excecuting")
 		{
+			/*obj.currentPhase = std::make_unique<ExecutingPhase>();
+			sessionFileStream >> (dynamic_cast<ExecutingPhase>(*obj.currentPhase));*/
 			auto tempphase = new ExecutingPhase();
 			sessionFileStream >> *tempphase;
 			obj.currentPhase.reset(tempphase);

@@ -1,6 +1,5 @@
 #pragma once
 
-//todo haal deze uit een file
 enum Character
 {
 	Moordenaar = 1,
@@ -13,8 +12,24 @@ enum Character
 	Condottiere = 8,
 };
 
-//todo maak dit iets mooier
-static map<Character, string> characterEnumToString = { {Moordenaar,"Moordenaar"},{ Dief,"Dief" },{ Magier,"Magier" },{ Koning,"Koning" },{ Prediker,"Prediker" },{ Koopman,"Koopman" },{ Bouwmeester,"Bouwmeester" },{ Condottiere,"Condottiere" }, };
-static map<string, Character> characterStringToEnum = { {"Moordenaar", Moordenaar },{"Dief", Dief },{"Magier", Magier },{ "Koning" ,Koning },{ "Prediker",Prediker },{ "Koopman",Koopman },{ "Bouwmeester",Bouwmeester },{ "Condottiere",Condottiere }, };
-
+static map<Character, string> characterEnumToString = { 
+	{Moordenaar,"Moordenaar"},
+	{ Dief,"Dief" },
+	{ Magier,"Magier" },
+	{ Koning,"Koning" },
+	{ Prediker,"Prediker" },
+	{ Koopman,"Koopman" },
+	{ Bouwmeester,"Bouwmeester" },
+	{ Condottiere,"Condottiere" }, 
+};
+static map<string, Character> characterStringToEnum = { 
+	{ characterEnumToString.at(Moordenaar), Moordenaar },
+	{ characterEnumToString.at(Dief), Dief },
+	{ characterEnumToString.at(Magier), Magier },
+	{ characterEnumToString.at(Koning) ,Koning },
+	{ characterEnumToString.at(Prediker),Prediker },
+	{ characterEnumToString.at(Koopman),Koopman },
+	{ characterEnumToString.at(Bouwmeester),Bouwmeester },
+	{ characterEnumToString.at(Condottiere),Condottiere },
+};
 

@@ -27,10 +27,12 @@ private:
 	bool laboratoriumUsed = false;
 	bool laboratoriumDiscarding = false;
 
+	bool kerkhofActive = false;
+
 	deque<Card> cardBuffer;
 
 public:
-	ExecutingPhase(){ subPhase = 0; }
+	ExecutingPhase();
 	ExecutingPhase(shared_ptr<GameSession> session);
 	~ExecutingPhase();
 	bool HandleAction(int token, string message, shared_ptr<GameSession> session) override;
@@ -38,14 +40,9 @@ public:
 
 	void HandTurnToNextCharacter(shared_ptr<GameSession> session);
 
-	inline bool WasCharKilled(int character) const
-	{
-		return character == charToKill;
-	}
-	inline bool WasCharRobbed(int character) const
-	{
-		return character == charToRob;
-	}
+	inline bool WasCharKilled(int character) const;
+
+	inline bool WasCharRobbed(int character) const;
 
 	bool IsItMyTurn(int token, shared_ptr<GameSession> session) override;
 

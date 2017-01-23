@@ -1,2 +1,4 @@
-﻿  LocalHost.cpp
+﻿  ExecutingPhase.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\executingphase.cpp(83): warning C4018: '<=': signed/unsigned mismatch
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\executingphase.cpp(368): warning C4018: '<=': signed/unsigned mismatch
   MachiavelliLib.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\MachiavelliLib.lib

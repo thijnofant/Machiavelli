@@ -7,7 +7,6 @@
 //  Copyright (c) 2014 Avans Hogeschool, 's-Hertogenbosch. All rights reserved.
 //
 
-//todo use the new non blocking code
 #include "stdafx.h"
 
 #include "LocalHost.h"
@@ -70,7 +69,6 @@ std::shared_ptr<ClientInfo> init_client_session(Socket client) {
 	client.write(machiavelli::prompt);
 	string name{ client.readline() };
 	return make_shared<ClientInfo>(move(client), User{ name });
-	//todo voeg hier iets toe om te kijken of er al een client is met deze naam
 }
 
 void handle_client(Socket client, shared_ptr<IHostConnection> host) // this function runs in a separate thread
@@ -94,8 +92,7 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 				{
 					socket << messages << "\r\n";
 				}
-				
-				//todo haal deze status hier weg messages is the way to go
+			
 				string newStatus = host->GetGameStatus(user.GetToken());
 				if (status != newStatus)
 				{
@@ -135,7 +132,6 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 							{
 								running = false;
 								serverRunning = false;
-								//todo let other player know 
 								break;
 							}
 							else

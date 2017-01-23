@@ -37,7 +37,7 @@ public:
 	void ClearCharacters();
 	void Givecharacter(Character character);
 	void GiveMoney(int amount);
-	void SpendMoney(int amount);
+	int SpendMoney(int amount);
 	void GiveCards(deque<Card> card);
 	int BuildCard(string cardName);
 
@@ -48,7 +48,8 @@ public:
 	void SetWasFirstToEight(bool isFirst);
 	bool WasFirstToEight() const;
 	void ClearHand();
-	void DestroyBuildingFromVilage(string buildingName);
+	Card GetCard(string buildingName);
+	Card DestroyBuildingFromVilage(string buildingName);
 	void DiscardCardWithNameFromHand(string name);
 
 

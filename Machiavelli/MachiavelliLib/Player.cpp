@@ -112,9 +112,14 @@ void Player::GiveMoney(int amount)
 	amountOfCoins += amount;
 }
 
-void Player::SpendMoney(int amount)
+int Player::SpendMoney(int amount)
 {
+	if (amount > amountOfCoins)
+	{
+		amount = amountOfCoins;
+	}
 	amountOfCoins -= amount;
+	return amount;
 }
 
 void Player::GiveCards(deque<Card> cards)
@@ -127,11 +132,12 @@ void Player::GiveCards(deque<Card> cards)
 
 int Player::BuildCard(string cardName)
 {
+	/*todo put this back
 	if (HasCardInVillage(cardName))
 	{
 		SendMessage("You already have a copy of " + cardName + " in your village.");
 		return -1;
-	}
+	}*/
 
 	for (auto card : hand)
 	{
@@ -200,14 +206,23 @@ void Player::ClearHand()
 	hand.clear();
 }
 
-void Player::DestroyBuildingFromVilage(string buildingName)
+Card Player::GetCard(string buildingName)
 {
+	return *std::find_if(village.begin(), village.end(), [buildingName](Card a)->bool { return a.GetName() == buildingName; });
+}
+
+Card Player::DestroyBuildingFromVilage(string buildingName)
+{
+	Card reval = GetCard(buildingName);
+
 	auto it = std::find_if(village.begin(), village.end(), [buildingName](Card a)->bool { return a.GetName() == buildingName; });
 
 	if (it != village.end())
 	{
 		village.erase(it);
 	}
+
+	return reval;
 }
 
 void Player::DiscardCardWithNameFromHand(string name)

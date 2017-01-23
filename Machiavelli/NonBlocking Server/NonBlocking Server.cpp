@@ -110,7 +110,6 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 					socket << messages << "\r\n";
 				}
 
-				//todo haal deze status hier weg messages is the way to go
 				string newStatus = host->GetGameStatus(user.GetToken());
 				if (status != newStatus)
 				{
@@ -137,7 +136,7 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 					}
 					socket << "\r\n" << machiavelli::prompt;
 
-					int inCmd = -1;
+					int inCmd;
 					while (true)
 					{
 						string cmd;

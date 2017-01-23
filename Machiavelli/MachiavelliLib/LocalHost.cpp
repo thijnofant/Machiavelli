@@ -2,10 +2,10 @@
 #include "LocalHost.h"
 #include <memory>
 
-string LocalHost::Folder = "../Saves/";
-string LocalHost::SaveFile = "sessions.sav";
+const string LocalHost::Folder = "../Saves/";
+const string LocalHost::SaveFile = "sessions.sav";
 string LocalHost::CurrentExportingSessionName = "";
-string LocalHost::Extension = ".sav";
+const string LocalHost::Extension = ".sav";
 
 std::shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(int token)
 {
@@ -146,7 +146,7 @@ void LocalHost::SaveGame(string folder, string fileName)
 	os.close();
 }
 
-void LocalHost::LoadGameSessions(string folder, string fileName)
+void LocalHost::LoadGameSessions(const string folder, const string fileName)
 {	
 	std::ifstream is(folder + fileName);
 

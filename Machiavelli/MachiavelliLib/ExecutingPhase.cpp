@@ -3,6 +3,21 @@
 #include "CardGenerator.h"
 #include "LocalHost.h"
 
+ExecutingPhase::ExecutingPhase()
+{
+	subPhase = 0;
+}
+
+bool ExecutingPhase::WasCharKilled(int character) const
+{
+	return character == charToKill;
+}
+
+bool ExecutingPhase::WasCharRobbed(int character) const
+{
+	return character == charToRob;
+}
+
 ExecutingPhase::ExecutingPhase(shared_ptr<GameSession> session) : amountBuiltThisTurn{ 0 }, characterActionUsed{ false }, currentlyBuilding(false), selectingCharacter{ false }, discardingCardsFromBuffer{false}, condottiereSelectingPlayer{false}, magierTrading{false}, buildingsSafeFromCondottiere{false}
 {
 	subPhase = 0;
@@ -32,7 +47,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 
 	if (message == "Draw Cards")
 	{	
-		int drawAmount = 0;
+		int drawAmount;
 		if(currentPlayer->HasCardInVillage("Observatorium"))
 		{
 			session->SendAllPlayersMessage(currentPlayer->GetPlayerName() + " has drawn an additional card due to the effect of their Observatorium.");
@@ -237,10 +252,45 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 	if (condottiereSelectingBuilding)
 	{
 		condottiereSelectingBuilding = false;
-		session->GetPlayer(selectedCharacterToken)->DestroyBuildingFromVilage(message);
-		session->SendAllPlayersMessage("The condottiere destroyed the "+message+" from "+ session->GetPlayer(selectedCharacterToken)->GetPlayerName() +"'s village.");
+		cardBuffer.push_back(session->GetPlayer(selectedCharacterToken)->DestroyBuildingFromVilage(message));
+		session->SendAllPlayersMessage("The condottiere destroyed the " + message + " from "+ session->GetPlayer(selectedCharacterToken)->GetPlayerName() +"'s village.");
 
-		//todo init kerkhof
+		for (auto player: session->GetPlayers())
+		{
+			if (player->HasCardInVillage("Kerkhof"))
+			{
+				kerkhofActive = true;
+				return true;
+			}
+		}
+
+		cardBuffer.clear();
+		return true;
+	}
+
+	if (kerkhofActive)
+	{
+		if (message == "No")
+		{
+			cardBuffer.clear();
+			kerkhofActive = false;
+			return true;
+		}
+
+		int amountSpent = session->GetPlayer(token)->SpendMoney(1);
+		if (amountSpent >= 1 )
+		{
+			session->GetPlayer(token)->GiveCards(cardBuffer);
+			session->SendAllPlayersMessage(session->GetPlayer(token)->GetPlayerName() + " raised the card that the condotitiere just destroyed back from the dead with their Kerkhof and took it in their hands.");
+		}
+		else
+		{
+			session->GetPlayer(token)->SendMessage("You have insuficient funds to use the magic powers of the Karkhof.");
+		}
+
+		session->GiveMoney(amountSpent);
+		cardBuffer.clear();
+		kerkhofActive = false;
 		return true;
 	}
 
@@ -290,8 +340,20 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 
 vector<string> ExecutingPhase::GetActions(int token, shared_ptr<GameSession> session)
 {	
-	auto currentPlayer = session->GetCurrentPlayer();
 	vector<string> re_vector;
+
+	if (kerkhofActive)
+	{
+		auto player = session->GetPlayer(token);
+		player->SendMessage("Do you want to use the Kerkhof to spend 1 coin and take the destroyed card into your hand?");		
+		re_vector.push_back("Yes");
+		re_vector.push_back("No");
+		return re_vector;
+	}
+
+
+	auto currentPlayer = session->GetCurrentPlayer();
+	
 
 	if (subsubPhase == 1)
 	{
@@ -398,7 +460,7 @@ vector<string> ExecutingPhase::GetActions(int token, shared_ptr<GameSession> ses
 	{
 		for (auto player : session->GetPlayers())
 		{
-			if (!player->GetToken() == currentPlayer->GetToken())
+			if (!(player->GetToken() == currentPlayer->GetToken()))
 			{
 				re_vector.push_back(player->GetPlayerName());
 			}
@@ -470,8 +532,6 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 	subPhase++;
 	subsubPhase = 1;
 
-	charToKill = 0;
-	charToRob = 0;
 	amountBuiltThisTurn = 0;
 
 	characterActionUsed = false;
@@ -491,11 +551,12 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 	smederijUsed = false;
 	laboratoriumUsed = false;
 	laboratoriumDiscarding = false;
+	kerkhofActive = false;
 
 	cardBuffer.clear();
 
 	auto player = session->GetPlayerWithCharacter(static_cast<Character>(subPhase));
-	bool done = player != nullptr && !WasCharKilled(subPhase);
+	bool done = (player != nullptr && !WasCharKilled(subPhase));
 
 	while (!done)
 	{
@@ -522,8 +583,9 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 		int amountOfMoney = player->GetAmountOfCoins();
 		player->SpendMoney(amountOfMoney);
 		player->SendMessage("The thief stole " + std::to_string(amountOfMoney) + " from you.");
-		session->GetCurrentPlayer()->GiveMoney(amountOfMoney);
-		session->GetCurrentPlayer()->SendMessage("You stole " + std::to_string(amountOfMoney) + ".");
+		auto dief = session->GetPlayerWithCharacter(Dief);
+		dief->GiveMoney(amountOfMoney);
+		dief->SendMessage("You stole " + std::to_string(amountOfMoney) + ".");
 	}	
 
 	session->SetCurrentPlayer(player);
@@ -531,7 +593,10 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 
 bool ExecutingPhase::IsItMyTurn(int token, shared_ptr<GameSession> session)
 {
-	return  session->GetPlayerWithCharacter(static_cast<Character>(subPhase)) == session->GetPlayer(token);
+	if (!kerkhofActive)
+		return  session->GetPlayerWithCharacter(static_cast<Character>(subPhase)) == session->GetPlayer(token);
+
+	return (session->GetPlayer(token)->HasCardInVillage("Kerkhof") && (session->GetPlayer(token) != session->GetCurrentPlayer()));
 }
 
 string ExecutingPhase::ToString()
@@ -557,6 +622,7 @@ string ExecutingPhase::ToString()
 		(buildingsSafeFromCondottiere ? 1 : 0) << ';' <<
 		(smederijUsed ? 1 : 0) << ';' <<
 		(laboratoriumUsed ? 1 : 0) << ';' <<
+		(kerkhofActive ? 1 : 0) << ';' <<
 		(laboratoriumDiscarding ? 1 : 0) << '\n';
 
 	string fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "phasecardbuffer" + LocalHost::Extension;
@@ -605,7 +671,8 @@ std::istream& operator>>(std::istream& is, ExecutingPhase& obj)
 		obj.buildingsSafeFromCondottiere = seglist[14] == "1";
 		obj.smederijUsed = seglist[15] == "1";
 		obj.laboratoriumUsed = seglist[16] == "1";
-		obj.laboratoriumDiscarding = seglist[17] == "1";
+		obj.kerkhofActive = seglist[17] == "1";
+		obj.laboratoriumDiscarding = seglist[18] == "1";
 	}
 
 	//cardbuffer

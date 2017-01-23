@@ -1,12 +1,1 @@
-﻿  stdafx.cpp
-  throw.cpp
-  Socket.cpp
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\server\socket.cpp(72): warning C4068: unknown pragma
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\server\socket.cpp(121): warning C4018: '>=': signed/unsigned mismatch
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\server\socket.cpp(220): warning C4068: unknown pragma
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\server\socket.cpp(262): warning C4068: unknown pragma
-  Server.cpp
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\server\server.cpp(120): warning C4018: '<': signed/unsigned mismatch
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\server\server.cpp(132): warning C4018: '<=': signed/unsigned mismatch
-  Generating Code...
-  Server.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\Server.exe
+﻿

@@ -24,7 +24,7 @@ public:
 
 private:
     std::string name;
-	int token;
+	int token = -1;
 };
 
 #endif /* Player_hpp */

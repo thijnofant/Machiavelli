@@ -24,6 +24,7 @@ public:
 		}
 
 		is.close();
+		return reMap;
 	}
 };
 

@@ -17,8 +17,8 @@ public:
     CircularBuffer(std::size_t capacity) : buffer(capacity), head{0}, tail{0}, used{0} {}
 
     bool full() noexcept { return used == buffer.capacity(); }
-    bool empty() noexcept { return used == 0; }
-    int size() noexcept { return used; }
+    bool empty() const noexcept { return used == 0; }
+    int size() const noexcept { return used; }
 
     void clear() noexcept { 
         head = tail = used = 0; 

@@ -23,7 +23,6 @@ PickingCharactersPhase::~PickingCharactersPhase()
 
 bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<GameSession> session)
 {
-	//todo get characters from file
 	if (subPhase == 1 || subPhase == 2 || subPhase == 3 || subPhase == 4)
 	{
 		auto player = session->GetCurrentPlayer();

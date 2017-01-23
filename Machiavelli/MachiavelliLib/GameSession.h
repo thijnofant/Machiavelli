@@ -41,7 +41,7 @@ public:
 	bool AddPlayer(shared_ptr<Player> newPlayer, shared_ptr<GameSession> session);
 	bool HandleAction(int token, string message, shared_ptr<GameSession> session) const;
 	vector<string> GetActions(int token, shared_ptr<GameSession> session) const;
-	const bool IsItMyTurn(int token, shared_ptr<GameSession> session) const;
+	bool IsItMyTurn(int token, shared_ptr<GameSession> session) const;
 	void SetPhase(GamePhases phase, shared_ptr<GameSession> session);
 	shared_ptr<Player> GetCurrentPlayer() const;
 	void SetCurrentPlayer(shared_ptr<Player> player);

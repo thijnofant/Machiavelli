@@ -1,8 +1,1 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Machiavelli.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  stdafx.cpp
-  MachiavelliClient.cpp
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavelli\machiavelliclient.cpp(41): warning C4018: '<': signed/unsigned mismatch
-d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavelli\machiavelliclient.cpp(51): warning C4018: '<=': signed/unsigned mismatch
-  Machiavelli.cpp
-  Generating Code...
-  Machiavelli.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\MachiavelliClient.exe
+﻿

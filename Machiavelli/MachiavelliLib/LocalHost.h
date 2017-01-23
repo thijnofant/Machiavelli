@@ -23,11 +23,11 @@ public:
 	bool Disconect(int token) override;
 	string GetMessages(int token) override;
 	void SaveGame(string folder, string fileName);
-	void LoadGameSessions(string folder, string fileName);	
+	void LoadGameSessions(const string folder, const string fileName);
 
-	static string LocalHost::Folder;
-	static string LocalHost::SaveFile;
+	const static string LocalHost::Folder;
+	const static string LocalHost::SaveFile;
 	static string LocalHost::CurrentExportingSessionName;
-	static string LocalHost::Extension;
+	const static string LocalHost::Extension;
 };
 
