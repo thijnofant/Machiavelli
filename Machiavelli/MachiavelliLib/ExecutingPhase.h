@@ -51,7 +51,7 @@ public:
 
 
 	//stream functions
-	friend std::ostream& operator<<(std::ostream& os, const ExecutingPhase& obj);
 	friend std::istream& operator>>(std::istream& is, ExecutingPhase& obj);
+	string ToString() override;
 };
 

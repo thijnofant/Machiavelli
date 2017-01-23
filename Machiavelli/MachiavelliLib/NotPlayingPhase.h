@@ -10,6 +10,6 @@ public:
 	bool IsItMyTurn(int token, shared_ptr<GameSession> session) override;
 
 	//stream functions
-	friend std::ostream& operator<<(std::ostream& os, const NotPlayingPhase& obj);
+	string ToString() override;
 };
 

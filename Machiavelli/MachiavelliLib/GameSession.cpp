@@ -4,6 +4,7 @@
 #include "PickingCharactersPhase.h"
 #include "ExecutingPhase.h"
 #include "NotPlayingPhase.h"
+#include "LocalHost.h"
 
 
 GameSession::GameSession(int amountOfPlayers) : 
@@ -375,7 +376,39 @@ void GameSession::ShuffleDeck()
 
 std::ostream& operator<<(std::ostream& os, const GameSession& obj)
 {
-	//todo this
+	//session info
+	string firstLine = to_string(obj.amountOfMoneyInBank) + ";" + to_string(obj.amountOfPlayers) + ";" + (obj.gameOver ? "1" : "0") + ";" + to_string(obj.GetCurrentPlayer()->GetToken());
+	string fileName = "";
+	os << firstLine << '\n';
+
+	//deck
+	fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "deck" + LocalHost::Extension;
+	os << fileName << '\n';
+	CardGenerator::BuildFileFromCards(fileName, obj.deck);
+
+	//discard pile
+	fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "discard" + LocalHost::Extension;
+	os << fileName << '\n';
+	CardGenerator::BuildFileFromCards(fileName, obj.discardPile);
+
+	//players
+	for (auto player : obj.players)
+	{
+		fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "player" + to_string(player->GetToken()) + LocalHost::Extension;
+		os << fileName << '\n';
+		ofstream playerOStream(fileName);
+		playerOStream << *player;
+		playerOStream.close();
+
+	}
+
+	//gamestate
+	fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "phase" + LocalHost::Extension;
+	os << fileName;
+	ofstream gamePhaseOStream(fileName);
+	gamePhaseOStream << obj.currentPhase->ToString();
+	gamePhaseOStream.close();
+
 	return os;
 }
 
@@ -445,6 +478,7 @@ std::istream& operator>>(std::istream& is, GameSession& obj)
 			sessionFileStream >> *tempphase;
 			obj.currentPhase.reset(tempphase);
 		}
+		sessionFileStream.close();
 	}
 
 

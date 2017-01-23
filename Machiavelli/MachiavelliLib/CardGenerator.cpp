@@ -80,7 +80,7 @@ deque<Card> CardGenerator::BuildDeckFromFile(string fileName)
 	//NOTE: if failbit set, does not enter while.
 	while (is >> newCard)
 	{
-		if (is.good())
+		if (is.good() || is.eof())
 		{
 			_deck.push_back(newCard);
 		}
@@ -93,4 +93,15 @@ deque<Card> CardGenerator::BuildDeckFromFile(string fileName)
 
 	is.close();
 	return _deck;
+}
+
+void CardGenerator::BuildFileFromCards(string fileName, deque<Card> deck)
+{
+	std::ofstream os(fileName);
+
+	for (auto card : deck)
+	{
+		os << card << '\n';
+	}
+	os.close();
 }

@@ -22,6 +22,12 @@ public:
 	bool SendMessageToHost(int token, string message) override;
 	bool Disconect(int token) override;
 	string GetMessages(int token) override;
-	void LoadGameSessions(string folder, string fileName);
+	void SaveGame(string folder, string fileName);
+	void LoadGameSessions(string folder, string fileName);	
+
+	static string LocalHost::Folder;
+	static string LocalHost::SaveFile;
+	static string LocalHost::CurrentExportingSessionName;
+	static string LocalHost::Extension;
 };
 

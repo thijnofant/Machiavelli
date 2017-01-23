@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "CardGenerator.h"
+#include "LocalHost.h"
 
 Player::Player(int token, string playerName, bool isKing): token{token}, playerName{playerName}, isKing{isKing}, firstToEight(false), amountOfCoins{0}
 {
@@ -221,7 +222,26 @@ void Player::DiscardCardWithNameFromHand(string name)
 
 std::ostream& operator<<(std::ostream& os, const Player& obj)
 {
-	//todo implement this function
+	os <<
+		to_string(obj.token) << ';' <<
+		obj.playerName << ';' <<
+		(obj.isKing ? 1 : 0) << ';' <<
+		(obj.firstToEight ? 1 : 0) << ';' <<
+		to_string(obj.amountOfCoins) << '\n';
+
+	string fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "player" + to_string(obj.GetToken()) + "hand" + LocalHost::Extension;
+	CardGenerator::BuildFileFromCards(fileName, obj.hand);
+	os << fileName << '\n';
+
+	fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "player" + to_string(obj.GetToken()) + "village" + LocalHost::Extension;
+	CardGenerator::BuildFileFromCards(fileName, obj.village);
+	os << fileName << '\n';
+
+	for (auto character : obj.characters)
+	{
+		os << characterEnumToString.at(character) << '\n';
+	}
+
 	return os;
 }
 
@@ -254,7 +274,6 @@ std::istream& operator>>(std::istream& is, Player& obj)
 	obj.village = CardGenerator::BuildDeckFromFile(line);
 
 	//GetCharacters
-	//todo GetCharacters
 	while(getline(is, line))
 	{
 		if (line != "")

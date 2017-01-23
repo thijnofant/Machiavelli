@@ -15,7 +15,7 @@ public:
 
 
 	//stream functions
-	friend std::ostream& operator<<(std::ostream& os, const PickingCharactersPhase& obj);
 	friend std::istream& operator>>(std::istream& is, PickingCharactersPhase& obj);
+	string ToString() override;
 };
 

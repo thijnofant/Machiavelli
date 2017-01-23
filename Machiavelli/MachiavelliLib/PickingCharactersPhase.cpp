@@ -45,6 +45,7 @@ bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<
 				subsubPhase = 1;
 				session->NextPlayer();
 			}
+			return true;
 		}
 		//player gets to throw away character
 		else if (subsubPhase == 2)
@@ -62,6 +63,7 @@ bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<
 
 			subsubPhase = 1;
 			subPhase++;
+			return true;
 		}
 	}
 	return false;
@@ -127,11 +129,19 @@ bool PickingCharactersPhase::IsItMyTurn(int token, shared_ptr<GameSession> sessi
 	return session->GetCurrentPlayer() == session->GetPlayer(token);
 }
 
-std::ostream& operator<<(std::ostream& os, const PickingCharactersPhase& obj)
+string PickingCharactersPhase::ToString()
 {
-	//todo set PickingCharacters in de stream
-	//todo make this thing
-	return os;
+	std::stringstream stream;
+	stream << "PickingCharacters" << '\n';
+	stream << to_string(subPhase) << ';' << to_string(subsubPhase) << '\n';
+
+	//available characters
+	for (auto character : availableCharacters)
+	{
+		stream << characterEnumToString.at(character) << '\n';
+	}
+
+	return stream.str();
 }
 
 std::istream& operator>>(std::istream& is, PickingCharactersPhase& obj)
@@ -163,7 +173,10 @@ std::istream& operator>>(std::istream& is, PickingCharactersPhase& obj)
 	obj.availableCharacters.clear();
 	while(getline(is ,line))
 	{
-		obj.availableCharacters.push_back(characterStringToEnum.at(line));
+		if (line != "")
+		{
+			obj.availableCharacters.push_back(characterStringToEnum.at(line));
+		}
 	}
 
 	return is;

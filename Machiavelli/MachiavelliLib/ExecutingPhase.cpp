@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ExecutingPhase.h"
 #include "CardGenerator.h"
+#include "LocalHost.h"
 
 ExecutingPhase::ExecutingPhase(shared_ptr<GameSession> session) : amountBuiltThisTurn{ 0 }, characterActionUsed{ false }, currentlyBuilding(false), selectingCharacter{ false }, discardingCardsFromBuffer{false}, condottiereSelectingPlayer{false}, magierTrading{false}, buildingsSafeFromCondottiere{false}
 {
@@ -24,13 +25,25 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 		{
 			session->GiveMoney(cost);
 			amountBuiltThisTurn++;
+			session->SendAllPlayersMessage(currentPlayer->GetPlayerName() + " has built a " + message + "in his village.");
 		}
 		currentlyBuilding = false;
 	}
 
 	if (message == "Draw Cards")
 	{	
-		int drawAmount = currentPlayer->HasCardInVillage("Observatorium") ? 3 : 2;
+		int drawAmount = 0;
+		if(currentPlayer->HasCardInVillage("Observatorium"))
+		{
+			session->SendAllPlayersMessage(currentPlayer->GetPlayerName() + " has drawn an additional card due to the effect of their Observatorium.");
+			drawAmount = 3;
+		}
+		else
+		{
+			session->SendAllPlayersMessage(currentPlayer->GetPlayerName() + " has drawn 2 cards.");
+			drawAmount = 2;
+		}
+		currentPlayer->HasCardInVillage("Observatorium") ? 3 : 2;
 		cardBuffer = session->DrawCards(drawAmount);
 		discardingCardsFromBuffer = true;
 
@@ -48,7 +61,18 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 
 		if (it != cardBuffer.end()) {
 			cardBuffer.erase(it);
+			session->SendAllPlayersMessage(currentPlayer->GetPlayerName() + " has discarded a card.");
 		}
+
+		int maxSize = currentPlayer->HasCardInVillage("Bibliotheek") ? 2 : 1;
+		if (cardBuffer.size() <= maxSize)
+		{
+			currentPlayer->GiveCards(cardBuffer);
+			cardBuffer.clear();
+			subsubPhase++;
+			discardingCardsFromBuffer = false;
+		}
+
 		return true;
 	}
 
@@ -56,7 +80,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 	{
 		int moneyTaken = session->TakeMoney(2);
 		currentPlayer->GiveMoney(moneyTaken);
-		currentPlayer->SendMessage("You took " + std::to_string(moneyTaken) + " coins from the bank.");
+		session->SendAllPlayersMessage(currentPlayer->GetPlayerName() + " took "+ std::to_string(moneyTaken) +" gold coins from the bank.");
 		subsubPhase++;
 		return true;
 	}
@@ -76,10 +100,12 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 		if (subPhase == Moordenaar)
 		{
 			charToKill = characterStringToEnum[message];
+			session->SendAllPlayersMessage("The moordenaar plans to kill the " + message + " he will not get a turn.");
 		}
 		if (subPhase == Dief)
 		{
 			charToRob = characterStringToEnum[message];
+			session->SendAllPlayersMessage("The dief sneaked up on the " + message + " and stole all their money.");
 		}
 		selectingCharacter = false;
 		return true;
@@ -118,6 +144,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 			currentPlayer->GiveCards(cardBuffer);
 			cardBuffer.clear();
 			magierTrading = false;
+			session->SendAllPlayersMessage("The magier used some magic to tradeall of his cards with the deck.");
 			return true;
 		}
 		if (session->GetPlayer(message))
@@ -130,6 +157,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 			currentPlayer->GiveCards(cardBuffer);
 			cardBuffer.clear();
 			magierTrading = false;
+			session->SendAllPlayersMessage("The magier used some dark magic to trade all of his cards with those of " + message + ".");
 			return true;
 		}
 		
@@ -146,6 +174,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 
 		currentPlayer->GiveMoney(session->TakeMoney(moneyTaken));
 		currentPlayer->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Koning's effect.");
+		session->SendAllPlayersMessage("All hail the new Koning " + currentPlayer->GetPlayerName()+ ".");
 		return true;
 	}
 	if (message == "Prediker")
@@ -156,6 +185,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 		moneyTaken += currentPlayer->GetAmountOfColourInVillage(Blue);
 		currentPlayer->GiveMoney(session->TakeMoney(moneyTaken));
 		currentPlayer->SendMessage("You got " + std::to_string(moneyTaken) + " coins from the Prediker's effect.");
+		session->SendAllPlayersMessage("The prediker calls upon the higher powers to protect his village from the condottiere.");
 		buildingsSafeFromCondottiere = true;
 		return true;
 	}
@@ -185,7 +215,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 
 		if (buildingsSafeFromCondottiere)
 		{
-			session->SendAllPlayersMessage("The prediker saved all buildings from being destroyed by the condotierre.");
+			session->SendAllPlayersMessage("The prediker's prayers were answered and all the buildings in his village were saved from being destroyed by the condotierre.");
 			return true;
 		}
 
@@ -208,6 +238,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 	{
 		condottiereSelectingBuilding = false;
 		session->GetPlayer(selectedCharacterToken)->DestroyBuildingFromVilage(message);
+		session->SendAllPlayersMessage("The condottiere destroyed the "+message+" from "+ session->GetPlayer(selectedCharacterToken)->GetPlayerName() +"'s village.");
 
 		//todo init kerkhof
 		return true;
@@ -221,6 +252,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 			currentPlayer->SpendMoney(3);
 			currentPlayer->GiveCards(session->DrawCards(2));
 			smederijUsed = true;
+			session->SendAllPlayersMessage("The smith produced 2 cards for "+currentPlayer->GetPlayerName()+".");
 		}
 		else
 		{
@@ -235,6 +267,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 		currentPlayer->GiveMoney(session->TakeMoney(1));
 		laboratoriumDiscarding = false;
 		laboratoriumUsed = true;
+		session->SendAllPlayersMessage("The alchemists in " + currentPlayer->GetPlayerName() + "'s Labratorium tried to turn one of his cards into gold... and succeeded!");
 	}
 
 	if (message == "Laboratorium" && currentPlayer->HasCardInVillage("Laboratorium"))
@@ -501,11 +534,36 @@ bool ExecutingPhase::IsItMyTurn(int token, shared_ptr<GameSession> session)
 	return  session->GetPlayerWithCharacter(static_cast<Character>(subPhase)) == session->GetPlayer(token);
 }
 
-std::ostream& operator<<(std::ostream& os, const ExecutingPhase& obj)
+string ExecutingPhase::ToString()
 {
-	//todo set PickingCharacters in de stream
-	//todo rest of this function
-	return os;
+	std::stringstream stream;
+	stream << "Excecuting" << '\n';
+
+	stream <<
+		to_string(subPhase) << ';' <<
+		to_string(subsubPhase) << ';' <<
+		to_string(charToKill) << ';' <<
+		to_string(charToRob) << ';' <<
+		to_string(amountBuiltThisTurn) << ';' <<
+		(characterActionUsed ? 1 : 0) << ';' <<
+		(currentlyBuilding ? 1 : 0) << ';' <<
+		(selectingCharacter ? 1 : 0) << ';' <<
+		(tradingCards ? 1 : 0) << ';' <<
+		(discardingCardsFromBuffer ? 1 : 0) << ';' <<
+		(condottiereSelectingPlayer ? 1 : 0) << ';' <<
+		(condottiereSelectingBuilding ? 1 : 0) << ';' <<
+		(selectedCharacterToken ? 1 : 0) << ';' <<
+		(magierTrading ? 1 : 0) << ';' <<
+		(buildingsSafeFromCondottiere ? 1 : 0) << ';' <<
+		(smederijUsed ? 1 : 0) << ';' <<
+		(laboratoriumUsed ? 1 : 0) << ';' <<
+		(laboratoriumDiscarding ? 1 : 0) << '\n';
+
+	string fileName = LocalHost::Folder + LocalHost::CurrentExportingSessionName + "phasecardbuffer" + LocalHost::Extension;
+	CardGenerator::BuildFileFromCards(fileName, cardBuffer);
+	stream << fileName;
+
+	return stream.str();
 }
 
 std::istream& operator>>(std::istream& is, ExecutingPhase& obj)

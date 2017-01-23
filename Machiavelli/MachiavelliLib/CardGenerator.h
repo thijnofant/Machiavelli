@@ -12,5 +12,6 @@ public:
 	static void AddCardXTimes(Card card, deque<Card> &deck, int amountOfTimes);
 
 	static deque<Card> BuildDeckFromFile(string fileName);
+	static void BuildFileFromCards(string fileName, deque<Card> deck);
 };
 

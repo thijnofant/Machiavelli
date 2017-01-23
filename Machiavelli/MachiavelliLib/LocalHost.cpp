@@ -2,6 +2,11 @@
 #include "LocalHost.h"
 #include <memory>
 
+string LocalHost::Folder = "../Saves/";
+string LocalHost::SaveFile = "sessions.sav";
+string LocalHost::CurrentExportingSessionName = "";
+string LocalHost::Extension = ".sav";
+
 std::shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(int token)
 {
 	for (auto session : sessions)
@@ -35,8 +40,7 @@ shared_ptr<GameSession> LocalHost::GetFirstWaitingSession()
 
 LocalHost::LocalHost(): lastToken{0}
 {
-	LoadGameSessions("../Saves", "sessions.sav");
-	//todo load saved sessions
+	LoadGameSessions(LocalHost::Folder, LocalHost::SaveFile);
 }
 
 
@@ -99,8 +103,12 @@ bool LocalHost::SendMessageToHost(int token, string message)
 		auto session = GetSessionWithPlayer(token);
 		if (session != nullptr)
 		{
-			return session->HandleAction(token, message, session);
-			//todo save session
+			if(session->HandleAction(token, message, session))
+			{
+				SaveGame(LocalHost::Folder, LocalHost::SaveFile);
+				return true;
+			}
+			return false;
 		}
 	}
 	return false;
@@ -121,18 +129,46 @@ string LocalHost::GetMessages(int token)
 	return "";
 }
 
+void LocalHost::SaveGame(string folder, string fileName)
+{
+	std::ofstream os(folder + fileName);
+
+	os << to_string(lastToken) << '\n';
+
+	for (size_t i = 0; i < sessions.size(); i++)
+	{
+		LocalHost::CurrentExportingSessionName = "session" + to_string(i);
+		std::ofstream sessionOs(folder + LocalHost::CurrentExportingSessionName + ".sav");
+		os << LocalHost::CurrentExportingSessionName + ".sav" << '\n';
+		sessionOs << *sessions[i];
+		sessionOs.close();
+	}
+	os.close();
+}
+
 void LocalHost::LoadGameSessions(string folder, string fileName)
 {	
-	std::ifstream is(folder + "/" + fileName);
+	std::ifstream is(folder + fileName);
 
 	string line = "";
+	getline(is, line);
+	lastToken = stoi(line);
+
 	while (std::getline(is, line))
 	{
-		shared_ptr<GameSession> session = std::make_shared<GameSession>();
-		std::ifstream sessionfilestream(folder + "/" + line);
-		sessionfilestream >> *session;
+		std::ifstream sessionfilestream(folder + line);
 
-		this->sessions.push_back(session);
+		try
+		{
+			shared_ptr<GameSession> session = std::make_shared<GameSession>();
+			sessionfilestream >> *session;
+
+			this->sessions.push_back(session);
+		}
+		catch(...)
+		{
+			
+		}
 		
 		sessionfilestream.close();
 	}

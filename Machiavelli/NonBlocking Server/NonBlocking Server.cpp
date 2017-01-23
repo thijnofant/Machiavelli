@@ -149,7 +149,14 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 							continue;
 						}
 
-						inCmd = stoi(cmd);
+						try
+						{
+							inCmd = stoi(cmd);
+						}
+						catch(invalid_argument ex)
+						{
+							inCmd = -1;
+						}
 
 						if (inCmd >= 0 && inCmd <= commands.size() - 1)
 						{
