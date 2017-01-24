@@ -33,7 +33,7 @@ public:
 	std::deque<Card> GetVillage() const;	
 	void SendMessage(string message);
 	string GetMessages();
-	string GetStatus();
+	string GetStatus() const;
 	void ClearCharacters();
 	void Givecharacter(Character character);
 	void GiveMoney(int amount);

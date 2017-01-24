@@ -110,7 +110,7 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 					socket << messages << "\r\n";
 				}
 
-				string newStatus = host->GetGameStatus(user.GetToken());
+				string const newStatus = host->GetGameStatus(user.GetToken());
 				if (status != newStatus)
 				{
 					status = newStatus;
@@ -152,7 +152,7 @@ void handle_client(Socket client, shared_ptr<IHostConnection> host) // this func
 						{
 							inCmd = stoi(cmd);
 						}
-						catch(invalid_argument ex)
+						catch(invalid_argument&)
 						{
 							inCmd = -1;
 						}

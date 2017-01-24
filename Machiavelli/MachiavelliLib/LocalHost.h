@@ -7,16 +7,16 @@ class LocalHost : public IHostConnection
 {
 private: 
 	vector<shared_ptr<GameSession>> sessions;
-	shared_ptr<GameSession> GetSessionWithPlayer(int token);
-	shared_ptr<GameSession> GetSessionWithPlayer(string playerName);
-	shared_ptr<GameSession> GetFirstWaitingSession();
+	shared_ptr<GameSession> GetSessionWithPlayer(int const token) const;
+	shared_ptr<GameSession> GetSessionWithPlayer(string const playerName) const;
+	shared_ptr<GameSession> GetFirstWaitingSession() const;
 	int lastToken;
 
 public:
 	LocalHost();
 	~LocalHost();
-	int Connect(string playerName) override;
-	bool IsItMyTurn(int token) override;
+	int Connect(string const playerName) override;
+	bool IsItMyTurn(int const token) const override;
 	string GetGameStatus(int token) override;
 	vector<string> GetCommands(int token) override;
 	bool SendMessageToHost(int token, string message) override;

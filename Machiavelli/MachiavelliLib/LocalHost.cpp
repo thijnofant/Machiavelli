@@ -7,7 +7,7 @@ const string LocalHost::SaveFile = "sessions.sav";
 string LocalHost::CurrentExportingSessionName = "";
 const string LocalHost::Extension = ".sav";
 
-std::shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(int token)
+std::shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(int const token) const
 {
 	for (auto session : sessions)
 	{
@@ -17,7 +17,7 @@ std::shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(int token)
 	return nullptr;
 }
 
-shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(string playerName)
+shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(string const playerName) const
 {
 	for (auto session : sessions)
 	{
@@ -27,7 +27,7 @@ shared_ptr<GameSession> LocalHost::GetSessionWithPlayer(string playerName)
 	return nullptr;
 }
 
-shared_ptr<GameSession> LocalHost::GetFirstWaitingSession()
+shared_ptr<GameSession> LocalHost::GetFirstWaitingSession() const
 {
 	for (auto session : sessions)
 	{
@@ -48,7 +48,7 @@ LocalHost::~LocalHost()
 {
 }
 
-int LocalHost::Connect(string playerName)
+int LocalHost::Connect(string const playerName)
 {
 	auto session = GetSessionWithPlayer(playerName);
 
@@ -74,7 +74,7 @@ int LocalHost::Connect(string playerName)
 	return newPlayer->GetToken();
 }
 
-bool LocalHost::IsItMyTurn(int token)
+bool LocalHost::IsItMyTurn(int const token) const
 {	
 	auto session = GetSessionWithPlayer(token);
 	if (session != nullptr)

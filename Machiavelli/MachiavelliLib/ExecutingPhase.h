@@ -44,7 +44,7 @@ public:
 
 	inline bool WasCharRobbed(int character) const;
 
-	bool IsItMyTurn(int token, shared_ptr<GameSession> session) override;
+	bool IsItMyTurn(int const token, shared_ptr<GameSession> session) const override;
 
 
 	//stream functions

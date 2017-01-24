@@ -77,7 +77,7 @@ string Player::GetMessages()
 	return reval;
 }
 
-string Player::GetStatus()
+string Player::GetStatus() const
 {
 	std::stringstream status;
 
@@ -132,12 +132,12 @@ void Player::GiveCards(deque<Card> cards)
 
 int Player::BuildCard(string cardName)
 {
-	/*todo put this back
+	
 	if (HasCardInVillage(cardName))
 	{
 		SendMessage("You already have a copy of " + cardName + " in your village.");
 		return -1;
-	}*/
+	}
 
 	for (auto card : hand)
 	{

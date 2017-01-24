@@ -123,7 +123,7 @@ vector<string> PickingCharactersPhase::GetActions(int token, shared_ptr<GameSess
 	return re_vector;
 }
 
-bool PickingCharactersPhase::IsItMyTurn(int token, shared_ptr<GameSession> session)
+bool PickingCharactersPhase::IsItMyTurn(int const token, shared_ptr<GameSession> session) const
 {
 	return session->GetCurrentPlayer() == session->GetPlayer(token);
 }

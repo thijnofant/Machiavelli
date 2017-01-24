@@ -115,7 +115,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 		if (subPhase == Moordenaar)
 		{
 			charToKill = characterStringToEnum[message];
-			session->SendAllPlayersMessage("The moordenaar plans to kill the " + message + " he will not get a turn.");
+			session->SendAllPlayersMessage("The moordenaar plans to kill the " + message + ", he will not get a turn.");
 		}
 		if (subPhase == Dief)
 		{
@@ -583,6 +583,7 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 		int amountOfMoney = player->GetAmountOfCoins();
 		player->SpendMoney(amountOfMoney);
 		player->SendMessage("The thief stole " + std::to_string(amountOfMoney) + " from you.");
+
 		auto dief = session->GetPlayerWithCharacter(Dief);
 		dief->GiveMoney(amountOfMoney);
 		dief->SendMessage("You stole " + std::to_string(amountOfMoney) + ".");
@@ -591,7 +592,7 @@ void ExecutingPhase::HandTurnToNextCharacter(shared_ptr<GameSession> session)
 	session->SetCurrentPlayer(player);
 }
 
-bool ExecutingPhase::IsItMyTurn(int token, shared_ptr<GameSession> session)
+bool ExecutingPhase::IsItMyTurn(int const token, shared_ptr<GameSession> session) const
 {
 	if (!kerkhofActive)
 		return  session->GetPlayerWithCharacter(static_cast<Character>(subPhase)) == session->GetPlayer(token);

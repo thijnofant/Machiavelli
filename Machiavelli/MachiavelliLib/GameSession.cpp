@@ -9,7 +9,7 @@
 
 GameSession::GameSession(int amountOfPlayers) : 
 	amountOfMoneyInBank{ 30 }, 
-	deck(CardGenerator::BuildDeckFromFile("../cards2.txt")), 
+	deck(CardGenerator::BuildDeckFromFile("../cards.txt")), 
 	amountOfPlayers{ amountOfPlayers },
 	gameOver{ false }
 {
@@ -113,7 +113,7 @@ bool GameSession::ContainsPlayer(int token)
 	return false;
 }
 
-bool GameSession::ContainsPlayer(string playerName)
+bool GameSession::ContainsPlayer(string const playerName)const
 {
 	for (auto player : players)
 	{
@@ -155,7 +155,7 @@ vector<string> GameSession::GetActions(int token, shared_ptr<GameSession> sessio
 	return currentPhase->GetActions(token, session);
 }
 
-bool GameSession::IsItMyTurn(int token, shared_ptr<GameSession> session) const
+bool GameSession::IsItMyTurn(int const token, shared_ptr<GameSession> session) const
 {
 	if (gameOver)
 	{

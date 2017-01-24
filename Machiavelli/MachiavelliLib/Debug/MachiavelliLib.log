@@ -1,4 +1,25 @@
-﻿  ExecutingPhase.cpp
+﻿  Player.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(18): warning C4373: 'LocalHost::Connect': virtual function overrides 'IHostConnection::Connect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(6): note: see declaration of 'IHostConnection::Connect'
+  PickingCharactersPhase.cpp
+  NotPlayingPhase.cpp
+  LocalHost.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(18): warning C4373: 'LocalHost::Connect': virtual function overrides 'IHostConnection::Connect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(6): note: see declaration of 'IHostConnection::Connect'
+  GameSession.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(18): warning C4373: 'LocalHost::Connect': virtual function overrides 'IHostConnection::Connect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(6): note: see declaration of 'IHostConnection::Connect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(169): warning C4018: '>=': signed/unsigned mismatch
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(326): warning C4018: '>=': signed/unsigned mismatch
+  ExecutingPhase.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(18): warning C4373: 'LocalHost::Connect': virtual function overrides 'IHostConnection::Connect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(6): note: see declaration of 'IHostConnection::Connect'
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\executingphase.cpp(83): warning C4018: '<=': signed/unsigned mismatch
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\executingphase.cpp(368): warning C4018: '<=': signed/unsigned mismatch
+  Generating Code...
+  Compiling...
+  ServerHostConnection.cpp
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  CardGenerator.cpp
   MachiavelliLib.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\MachiavelliLib.lib

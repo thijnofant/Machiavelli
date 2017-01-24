@@ -23,12 +23,12 @@ vector<string> NotPlayingPhase::GetActions(int token, shared_ptr<GameSession> se
 	return  reVec;
 }
 
-bool NotPlayingPhase::IsItMyTurn(int token, shared_ptr<GameSession> session)
+bool NotPlayingPhase::IsItMyTurn(int const token, shared_ptr<GameSession> session) const
 {
 	return false;
 }
 
-string NotPlayingPhase::ToString()
+string NotPlayingPhase::ToString() 
 {
 	return "NotPlaying";
 }
