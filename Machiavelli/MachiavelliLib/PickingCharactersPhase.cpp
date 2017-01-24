@@ -21,7 +21,7 @@ PickingCharactersPhase::~PickingCharactersPhase()
 {
 }
 
-bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<GameSession> session)
+bool PickingCharactersPhase::HandleAction(int const token, string const message, shared_ptr<GameSession> session)
 {
 	if (subPhase == 1 || subPhase == 2 || subPhase == 3 || subPhase == 4)
 	{
@@ -68,7 +68,7 @@ bool PickingCharactersPhase::HandleAction(int token, string message, shared_ptr<
 	return false;
 }
 
-vector<string> PickingCharactersPhase::GetActions(int token, shared_ptr<GameSession> session)
+vector<string> PickingCharactersPhase::GetActions(int const token, shared_ptr<GameSession> session)
 {
 	vector<string> re_vector;
 	if (session->GetAmountOfPlayers() == 2)
@@ -128,7 +128,7 @@ bool PickingCharactersPhase::IsItMyTurn(int const token, shared_ptr<GameSession>
 	return session->GetCurrentPlayer() == session->GetPlayer(token);
 }
 
-string PickingCharactersPhase::ToString()
+string PickingCharactersPhase::ToString() const
 {
 	std::stringstream stream;
 	stream << "PickingCharacters" << '\n';

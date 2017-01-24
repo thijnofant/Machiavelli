@@ -35,20 +35,20 @@ public:
 	ExecutingPhase();
 	ExecutingPhase(shared_ptr<GameSession> session);
 	~ExecutingPhase();
-	bool HandleAction(int token, string message, shared_ptr<GameSession> session) override;
-	vector<string> GetActions(int token, shared_ptr<GameSession> session) override;
+	bool HandleAction(int const token, string const message, shared_ptr<GameSession> session) override;
+	vector<string> GetActions(int const token, shared_ptr<GameSession> session) override;
 
 	void HandTurnToNextCharacter(shared_ptr<GameSession> session);
 
-	inline bool WasCharKilled(int character) const;
+	inline bool WasCharKilled(int const character) const;
 
-	inline bool WasCharRobbed(int character) const;
+	inline bool WasCharRobbed(int const character) const;
 
 	bool IsItMyTurn(int const token, shared_ptr<GameSession> session) const override;
 
 
 	//stream functions
 	friend std::istream& operator>>(std::istream& is, ExecutingPhase& obj);
-	string ToString() override;
+	string ToString() const override;
 };
 

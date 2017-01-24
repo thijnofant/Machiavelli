@@ -8,7 +8,7 @@ private:
 public:
 	PickingCharactersPhase();
 	~PickingCharactersPhase();
-	bool HandleAction(int token, string message, shared_ptr<GameSession> session) override;
+	bool HandleAction(int const token, string const message, shared_ptr<GameSession> session) override;
 	vector<string> GetActions(int token, shared_ptr<GameSession> session) override;
 	bool IsItMyTurn(int const token, shared_ptr<GameSession> session) const override;
 
@@ -16,6 +16,6 @@ public:
 
 	//stream functions
 	friend std::istream& operator>>(std::istream& is, PickingCharactersPhase& obj);
-	string ToString() override;
+	string ToString() const override;
 };
 

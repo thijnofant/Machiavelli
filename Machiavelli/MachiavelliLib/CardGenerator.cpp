@@ -2,16 +2,7 @@
 #include "CardGenerator.h"
 #include "GameSession.h"
 
-
-CardGenerator::CardGenerator()
-{
-}
-
-
-CardGenerator::~CardGenerator()
-{
-}
-
+/*
 deque<Card> CardGenerator::CreateAndGetAllCards(GameSession* session)
 {
 	deque<Card> r_vector;
@@ -71,8 +62,9 @@ void CardGenerator::AddCardXTimes(Card card, deque<Card>& deck, int amountOfTime
 		deck.push_back(card);
 	}
 }
+*/
 
-deque<Card> CardGenerator::BuildDeckFromFile(string fileName)
+deque<Card> CardGenerator::BuildDeckFromFile(string const fileName)
 {
 	std::ifstream is(fileName);
 	deque<Card> _deck;
@@ -92,10 +84,11 @@ deque<Card> CardGenerator::BuildDeckFromFile(string fileName)
 	}
 
 	is.close();
+
 	return _deck;
 }
 
-void CardGenerator::BuildFileFromCards(string fileName, deque<Card> deck)
+void CardGenerator::BuildFileFromCards(string const fileName, deque<Card> const deck)
 {
 	std::ofstream os(fileName);
 
@@ -103,5 +96,6 @@ void CardGenerator::BuildFileFromCards(string fileName, deque<Card> deck)
 	{
 		os << card << '\n';
 	}
+
 	os.close();
 }

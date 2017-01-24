@@ -13,9 +13,9 @@ public:
 	}
 
 	GamePhase() : subPhase{ 1 }, subsubPhase{ 1 } {}
-	virtual bool HandleAction(int token, string message, shared_ptr<GameSession> session) = 0;
-	virtual vector<string> GetActions(int token, shared_ptr<GameSession> session) = 0;
+	virtual bool HandleAction(int const token, string const message, shared_ptr<GameSession> session) = 0;
+	virtual vector<string> GetActions(int const token, shared_ptr<GameSession> session) = 0;
 	virtual bool IsItMyTurn(int const token, shared_ptr<GameSession> session) const = 0;
-	virtual string ToString() = 0;
+	virtual string ToString() const = 0;
 };
 

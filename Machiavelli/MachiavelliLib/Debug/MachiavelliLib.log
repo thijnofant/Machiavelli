@@ -1,25 +1,77 @@
-﻿  Player.cpp
+﻿  stdafx.cpp
+  Util.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\util.cpp(26): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\util.cpp(38): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Player.cpp
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(18): warning C4373: 'LocalHost::Connect': virtual function overrides 'IHostConnection::Connect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
   d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(6): note: see declaration of 'IHostConnection::Connect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(20): warning C4373: 'LocalHost::GetGameStatus': virtual function overrides 'IHostConnection::GetGameStatus', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(11): note: see declaration of 'IHostConnection::GetGameStatus'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(21): warning C4373: 'LocalHost::GetCommands': virtual function overrides 'IHostConnection::GetCommands', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(8): note: see declaration of 'IHostConnection::GetCommands'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(22): warning C4373: 'LocalHost::SendMessageToHost': virtual function overrides 'IHostConnection::SendMessageToHost', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(9): note: see declaration of 'IHostConnection::SendMessageToHost'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(23): warning C4373: 'LocalHost::Disconect': virtual function overrides 'IHostConnection::Disconect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(10): note: see declaration of 'IHostConnection::Disconect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(24): warning C4373: 'LocalHost::GetMessages': virtual function overrides 'IHostConnection::GetMessages', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(12): note: see declaration of 'IHostConnection::GetMessages'
   PickingCharactersPhase.cpp
-  NotPlayingPhase.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\pickingcharactersphase.h(12): warning C4373: 'PickingCharactersPhase::GetActions': virtual function overrides 'GamePhase::GetActions', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamephase.h(17): note: see declaration of 'GamePhase::GetActions'
+  Generating Code...
+  Compiling...
   LocalHost.cpp
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(18): warning C4373: 'LocalHost::Connect': virtual function overrides 'IHostConnection::Connect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
   d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(6): note: see declaration of 'IHostConnection::Connect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(20): warning C4373: 'LocalHost::GetGameStatus': virtual function overrides 'IHostConnection::GetGameStatus', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(11): note: see declaration of 'IHostConnection::GetGameStatus'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(21): warning C4373: 'LocalHost::GetCommands': virtual function overrides 'IHostConnection::GetCommands', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(8): note: see declaration of 'IHostConnection::GetCommands'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(22): warning C4373: 'LocalHost::SendMessageToHost': virtual function overrides 'IHostConnection::SendMessageToHost', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(9): note: see declaration of 'IHostConnection::SendMessageToHost'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(23): warning C4373: 'LocalHost::Disconect': virtual function overrides 'IHostConnection::Disconect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(10): note: see declaration of 'IHostConnection::Disconect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(24): warning C4373: 'LocalHost::GetMessages': virtual function overrides 'IHostConnection::GetMessages', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(12): note: see declaration of 'IHostConnection::GetMessages'
   GameSession.cpp
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\pickingcharactersphase.h(12): warning C4373: 'PickingCharactersPhase::GetActions': virtual function overrides 'GamePhase::GetActions', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamephase.h(17): note: see declaration of 'GamePhase::GetActions'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\notplayingphase.h(9): warning C4373: 'NotPlayingPhase::GetActions': virtual function overrides 'GamePhase::GetActions', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamephase.h(17): note: see declaration of 'GamePhase::GetActions'
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(18): warning C4373: 'LocalHost::Connect': virtual function overrides 'IHostConnection::Connect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
   d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(6): note: see declaration of 'IHostConnection::Connect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(20): warning C4373: 'LocalHost::GetGameStatus': virtual function overrides 'IHostConnection::GetGameStatus', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(11): note: see declaration of 'IHostConnection::GetGameStatus'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(21): warning C4373: 'LocalHost::GetCommands': virtual function overrides 'IHostConnection::GetCommands', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(8): note: see declaration of 'IHostConnection::GetCommands'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(22): warning C4373: 'LocalHost::SendMessageToHost': virtual function overrides 'IHostConnection::SendMessageToHost', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(9): note: see declaration of 'IHostConnection::SendMessageToHost'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(23): warning C4373: 'LocalHost::Disconect': virtual function overrides 'IHostConnection::Disconect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(10): note: see declaration of 'IHostConnection::Disconect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(24): warning C4373: 'LocalHost::GetMessages': virtual function overrides 'IHostConnection::GetMessages', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(12): note: see declaration of 'IHostConnection::GetMessages'
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(169): warning C4018: '>=': signed/unsigned mismatch
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\gamesession.cpp(326): warning C4018: '>=': signed/unsigned mismatch
   ExecutingPhase.cpp
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(18): warning C4373: 'LocalHost::Connect': virtual function overrides 'IHostConnection::Connect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
   d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(6): note: see declaration of 'IHostConnection::Connect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(20): warning C4373: 'LocalHost::GetGameStatus': virtual function overrides 'IHostConnection::GetGameStatus', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(11): note: see declaration of 'IHostConnection::GetGameStatus'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(21): warning C4373: 'LocalHost::GetCommands': virtual function overrides 'IHostConnection::GetCommands', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(8): note: see declaration of 'IHostConnection::GetCommands'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(22): warning C4373: 'LocalHost::SendMessageToHost': virtual function overrides 'IHostConnection::SendMessageToHost', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(9): note: see declaration of 'IHostConnection::SendMessageToHost'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(23): warning C4373: 'LocalHost::Disconect': virtual function overrides 'IHostConnection::Disconect', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(10): note: see declaration of 'IHostConnection::Disconect'
+d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\localhost.h(24): warning C4373: 'LocalHost::GetMessages': virtual function overrides 'IHostConnection::GetMessages', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+  d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\ihostconnection.h(12): note: see declaration of 'IHostConnection::GetMessages'
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\executingphase.cpp(83): warning C4018: '<=': signed/unsigned mismatch
 d:\users\thijn\documents\smartgit\machiavelli\machiavelli\machiavellilib\executingphase.cpp(368): warning C4018: '<=': signed/unsigned mismatch
   Generating Code...
-  Compiling...
-  ServerHostConnection.cpp
-  Generating Code...
   Skipping... (no relevant changes detected)
+  ServerHostConnection.cpp
+  CharacterGenerator.cpp
+  Card.cpp
+  NotPlayingPhase.cpp
   CardGenerator.cpp
   MachiavelliLib.vcxproj -> D:\Users\Thijn\Documents\smartgit\Machiavelli\Machiavelli\Debug\MachiavelliLib.lib

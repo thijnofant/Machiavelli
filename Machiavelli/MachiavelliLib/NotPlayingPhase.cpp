@@ -28,7 +28,7 @@ bool NotPlayingPhase::IsItMyTurn(int const token, shared_ptr<GameSession> sessio
 	return false;
 }
 
-string NotPlayingPhase::ToString() 
+string NotPlayingPhase::ToString() const
 {
 	return "NotPlaying";
 }

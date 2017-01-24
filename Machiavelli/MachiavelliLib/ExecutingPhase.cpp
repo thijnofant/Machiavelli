@@ -8,12 +8,12 @@ ExecutingPhase::ExecutingPhase()
 	subPhase = 0;
 }
 
-bool ExecutingPhase::WasCharKilled(int character) const
+bool ExecutingPhase::WasCharKilled(int const character) const
 {
 	return character == charToKill;
 }
 
-bool ExecutingPhase::WasCharRobbed(int character) const
+bool ExecutingPhase::WasCharRobbed(int const character) const
 {
 	return character == charToRob;
 }
@@ -29,7 +29,7 @@ ExecutingPhase::~ExecutingPhase()
 {
 }
 
-bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSession> session)
+bool ExecutingPhase::HandleAction(int const token, string const message, shared_ptr<GameSession> session)
 {
 	auto currentPlayer = session->GetCurrentPlayer();
 
@@ -40,7 +40,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 		{
 			session->GiveMoney(cost);
 			amountBuiltThisTurn++;
-			session->SendAllPlayersMessage(currentPlayer->GetPlayerName() + " has built a " + message + "in his village.");
+			session->SendAllPlayersMessage(currentPlayer->GetPlayerName() + " has built a " + message + " in his village.");
 		}
 		currentlyBuilding = false;
 	}
@@ -257,7 +257,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 
 		for (auto player: session->GetPlayers())
 		{
-			if (player->HasCardInVillage("Kerkhof"))
+			if (player->HasCardInVillage("Kerkhof") && (!player->HasCharacter(Condottiere)))
 			{
 				kerkhofActive = true;
 				return true;
@@ -338,7 +338,7 @@ bool ExecutingPhase::HandleAction(int token, string message, shared_ptr<GameSess
 	return false;
 }
 
-vector<string> ExecutingPhase::GetActions(int token, shared_ptr<GameSession> session)
+vector<string> ExecutingPhase::GetActions(int const token, shared_ptr<GameSession> session)
 {	
 	vector<string> re_vector;
 
@@ -600,7 +600,7 @@ bool ExecutingPhase::IsItMyTurn(int const token, shared_ptr<GameSession> session
 	return (session->GetPlayer(token)->HasCardInVillage("Kerkhof") && (session->GetPlayer(token) != session->GetCurrentPlayer()));
 }
 
-string ExecutingPhase::ToString()
+string ExecutingPhase::ToString() const
 {
 	std::stringstream stream;
 	stream << "Excecuting" << '\n';

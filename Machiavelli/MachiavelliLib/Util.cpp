@@ -13,7 +13,7 @@ Util::~Util()
 {
 }
 
-int Util::GetRandomNumber(int min, int max)
+int Util::GetRandomNumber(int const min, int const max)
 {
 	if (min > max)
 	{

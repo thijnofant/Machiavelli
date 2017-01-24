@@ -17,11 +17,11 @@ public:
 	~LocalHost();
 	int Connect(string const playerName) override;
 	bool IsItMyTurn(int const token) const override;
-	string GetGameStatus(int token) override;
-	vector<string> GetCommands(int token) override;
-	bool SendMessageToHost(int token, string message) override;
-	bool Disconect(int token) override;
-	string GetMessages(int token) override;
+	string GetGameStatus(int const token) const override;
+	vector<string> GetCommands(int const token) override;
+	bool SendMessageToHost(int const token, string const message) override;
+	bool Disconect(int const token) override;
+	string GetMessages(int const token) override;
 	void SaveGame(string folder, string fileName);
 	void LoadGameSessions(const string folder, const string fileName);
 

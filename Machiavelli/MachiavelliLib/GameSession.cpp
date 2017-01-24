@@ -22,7 +22,7 @@ GameSession::~GameSession()
 {
 }
 
-shared_ptr<Player> GameSession::GetPlayer(int token)
+shared_ptr<Player> GameSession::GetPlayer(int const token) const
 {
 	for (auto player : players)
 	{
@@ -34,7 +34,7 @@ shared_ptr<Player> GameSession::GetPlayer(int token)
 	return nullptr;
 }
 
-shared_ptr<Player> GameSession::GetPlayer(string userName) const
+shared_ptr<Player> GameSession::GetPlayer(string const userName) const
 {
 	for (auto player : players)
 	{
@@ -51,7 +51,7 @@ vector<shared_ptr<Player>> GameSession::GetPlayers() const
 	return players;
 }
 
-string GameSession::GetStatus()
+string GameSession::GetStatus() const
 {
 	if (!IsFull())
 	{
@@ -84,7 +84,7 @@ string GameSession::GetStatus()
 	return status.str();
 }
 
-string GameSession::GetStatus(int token)
+string GameSession::GetStatus(int const token) const
 {	
 	if (!IsFull())
 	{
@@ -99,9 +99,9 @@ string GameSession::GetStatus(int token)
 	}
 
 	return GetStatus();
-	}
+}
 
-bool GameSession::ContainsPlayer(int token)
+bool GameSession::ContainsPlayer(int const token) const
 {
 	for (auto player : players)
 	{
@@ -145,12 +145,12 @@ bool GameSession::AddPlayer(shared_ptr<Player> newPlayer, shared_ptr<GameSession
 	return false;
 }
 
-bool GameSession::HandleAction(int token, string message, shared_ptr<GameSession> session) const
+bool GameSession::HandleAction(int const token, string const message, shared_ptr<GameSession> session) const
 {
 	return currentPhase->HandleAction(token, message, session);
 }
 
-vector<string> GameSession::GetActions(int token, shared_ptr<GameSession> session) const
+vector<string> GameSession::GetActions(int const token, shared_ptr<GameSession> session) const
 {
 	return currentPhase->GetActions(token, session);
 }
@@ -169,7 +169,7 @@ bool GameSession::IsFull() const
 	return players.size() >= amountOfPlayers;
 }
 
-void GameSession::SetPhase(GamePhases phase, shared_ptr<GameSession> session)
+void GameSession::SetPhase(GamePhases const phase, shared_ptr<GameSession> session)
 {
 	cout << "switching to phase " << GamePhaseEnumToString.at(phase) << endl;
 
@@ -207,7 +207,7 @@ void GameSession::SetPhase(GamePhases phase, shared_ptr<GameSession> session)
 
 		shared_ptr<Player> highestScoringPlayer;
 		int highestScore = 0;
-		for (auto pair : scores)
+		for (auto const& pair : scores)
 		{
 			if (pair.second >= highestScore)
 			{
@@ -257,7 +257,7 @@ int GameSession::GetAmountOfPlayers() const
 	return amountOfPlayers;
 }
 
-shared_ptr<Player> GameSession::GetKing()
+shared_ptr<Player> GameSession::GetKing() const
 {
 	for (auto player : players)
 	{
@@ -269,7 +269,7 @@ shared_ptr<Player> GameSession::GetKing()
 	return nullptr;
 }
 
-shared_ptr<Player> GameSession::GetPlayerWithCharacter(Character character)
+shared_ptr<Player> GameSession::GetPlayerWithCharacter(Character const character) const
 {
 	for (auto player : players)
 	{
@@ -281,7 +281,7 @@ shared_ptr<Player> GameSession::GetPlayerWithCharacter(Character character)
 	return nullptr;
 }
 
-void GameSession::MakeKing(int token)
+void GameSession::MakeKing(int const token)
 {
 	for (auto player : players)
 	{
@@ -289,7 +289,7 @@ void GameSession::MakeKing(int token)
 	}
 }
 
-void GameSession::MakeKing(string playerName)
+void GameSession::MakeKing(string const playerName)
 {
 	for (auto player : players)
 	{
@@ -301,13 +301,13 @@ int GameSession::TakeMoney(int amount)
 {
 	if (amount > amountOfMoneyInBank)
 	{
-		amount = 0;
+		amount = amountOfMoneyInBank;
 	}
 	amountOfMoneyInBank -= amount;
 	return amount;
 }
 
-void GameSession::GiveMoney(int amount)
+void GameSession::GiveMoney(int const amount)
 {
 	amountOfMoneyInBank += amount;
 }
@@ -336,12 +336,12 @@ bool GameSession::IsGameOver() const
 	return gameOver;
 }
 
-void GameSession::SetGameOver(bool isGameOver)
+void GameSession::SetGameOver(bool const isGameOver)
 {
 	gameOver = isGameOver;
 }
 
-void GameSession::SendAllPlayersMessage(string message)
+void GameSession::SendAllPlayersMessage(string const message)
 {
 	for (auto player : players)
 	{
@@ -349,7 +349,7 @@ void GameSession::SendAllPlayersMessage(string message)
 	}
 }
 
-deque<Card> GameSession::DrawCards(int amount)
+deque<Card> GameSession::DrawCards(int const amount)
 {
 	deque<Card> reVector;
 	for (int i = 0; i < amount; i++)

@@ -10,7 +10,7 @@ public:
 	/**
 	This function returns a random integer between min and max (inclusive)
 	*/
-	static int GetRandomNumber(int min, int max);
+	static int GetRandomNumber(int const min, int const max);
 
 	static std::default_random_engine GetRandomEngine();
 };

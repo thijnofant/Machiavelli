@@ -84,7 +84,7 @@ bool LocalHost::IsItMyTurn(int const token) const
 	return false;
 }
 
-vector<string> LocalHost::GetCommands(int token)
+vector<string> LocalHost::GetCommands(int const token)
 {
 	auto session = GetSessionWithPlayer(token);
 	if (session != nullptr)
@@ -94,7 +94,7 @@ vector<string> LocalHost::GetCommands(int token)
 	return vector<string>();
 }
 
-bool LocalHost::SendMessageToHost(int token, string message)
+bool LocalHost::SendMessageToHost(int const token, string const message)
 {
 	cout << "host recieved: \"" << message << "\"." << endl;
 
@@ -114,12 +114,12 @@ bool LocalHost::SendMessageToHost(int token, string message)
 	return false;
 }
 
-bool LocalHost::Disconect(int token)
+bool LocalHost::Disconect(int const token)
 {
 	return true;
 }
 
-string LocalHost::GetMessages(int token)
+string LocalHost::GetMessages(int const token)
 {
 	auto session = GetSessionWithPlayer(token);
 	if (session != nullptr)
@@ -129,7 +129,7 @@ string LocalHost::GetMessages(int token)
 	return "";
 }
 
-void LocalHost::SaveGame(string folder, string fileName)
+void LocalHost::SaveGame(string const folder, string const fileName)
 {
 	std::ofstream os(folder + fileName);
 
@@ -175,7 +175,7 @@ void LocalHost::LoadGameSessions(const string folder, const string fileName)
 	is.close();
 }
 
-string LocalHost::GetGameStatus(int token)
+string LocalHost::GetGameStatus(int const token) const
 {
 	auto session = GetSessionWithPlayer(token);
 	if (session != nullptr)

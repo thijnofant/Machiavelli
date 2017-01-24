@@ -3,7 +3,8 @@
 #include "CardGenerator.h"
 #include "LocalHost.h"
 
-Player::Player(int token, string playerName, bool isKing): token{token}, playerName{playerName}, isKing{isKing}, firstToEight(false), amountOfCoins{0}
+Player::Player(int const token, string const playerName, bool const isKing): 
+token{token}, playerName{playerName}, isKing{isKing}, firstToEight(false), amountOfCoins{0}
 {
 }
 
@@ -32,7 +33,7 @@ int Player::GetAmountOfCoins() const
 	return amountOfCoins;
 }
 
-bool Player::HasCharacter(Character character)
+bool Player::HasCharacter(Character const character)  const
 {
 	for (auto playersCharacters : characters)
 	{
@@ -59,7 +60,7 @@ std::deque<Card> Player::GetVillage() const
 	return village;
 }
 
-void Player::SendMessage(string message)
+void Player::SendMessage(string const message)
 {
 	messages.push(message);
 }
@@ -107,7 +108,7 @@ void Player::Givecharacter(Character character)
 	characters.push_back(character);
 }
 
-void Player::GiveMoney(int amount)
+void Player::GiveMoney(int const amount)
 {
 	amountOfCoins += amount;
 }
@@ -122,7 +123,7 @@ int Player::SpendMoney(int amount)
 	return amount;
 }
 
-void Player::GiveCards(deque<Card> cards)
+void Player::GiveCards(deque<Card> const cards)
 {
 	for (auto card : cards)
 	{
@@ -130,7 +131,7 @@ void Player::GiveCards(deque<Card> cards)
 	}
 }
 
-int Player::BuildCard(string cardName)
+int Player::BuildCard(string const cardName)
 {
 	
 	if (HasCardInVillage(cardName))
@@ -146,7 +147,7 @@ int Player::BuildCard(string cardName)
 			if (card.GetCost() > this->amountOfCoins)
 			{
 				SendMessage("Insuficient funds to build the " + card.GetName());
-				return false;
+				return -1;
 			}
 
 			SpendMoney(card.GetCost());
@@ -161,7 +162,7 @@ int Player::BuildCard(string cardName)
 	return -1;
 }
 
-bool Player::HasCardInVillage(string cardName)
+bool Player::HasCardInVillage(string const cardName) const
 {
 	for (auto building : village)
 	{
@@ -173,7 +174,7 @@ bool Player::HasCardInVillage(string cardName)
 	return false;
 }
 
-int Player::GetAmountOfColourInVillage(CardColour colour)
+int Player::GetAmountOfColourInVillage(CardColour const colour) const
 {
 	int amount = 0;
 	for (auto building : village)
@@ -186,12 +187,12 @@ int Player::GetAmountOfColourInVillage(CardColour colour)
 	return amount;
 }
 
-void Player::SetIsKing(bool isKing)
+void Player::SetIsKing(bool const isKing)
 {
 	this->isKing = isKing;
 }
 
-void Player::SetWasFirstToEight(bool isFirst)
+void Player::SetWasFirstToEight(bool const isFirst)
 {
 	this->firstToEight = isFirst;
 }
@@ -206,12 +207,12 @@ void Player::ClearHand()
 	hand.clear();
 }
 
-Card Player::GetCard(string buildingName)
+Card Player::GetCard(string const buildingName)
 {
 	return *std::find_if(village.begin(), village.end(), [buildingName](Card a)->bool { return a.GetName() == buildingName; });
 }
 
-Card Player::DestroyBuildingFromVilage(string buildingName)
+Card Player::DestroyBuildingFromVilage(string const buildingName)
 {
 	Card reval = GetCard(buildingName);
 
@@ -225,7 +226,7 @@ Card Player::DestroyBuildingFromVilage(string buildingName)
 	return reval;
 }
 
-void Player::DiscardCardWithNameFromHand(string name)
+void Player::DiscardCardWithNameFromHand(string const name)
 {
 	auto it = std::find_if(hand.begin(), hand.end(), [name](Card a)->bool { return a.GetName() == name; });
 
